@@ -3,9 +3,7 @@ package com.example.android.picshape;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -13,11 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -25,8 +20,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+
+/**
+ * Created by Emerik Bedouin
+ */
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -35,13 +32,13 @@ public class WelcomeActivity extends AppCompatActivity {
     boolean result ;
     private String userChoosenTask;
     private int REQUEST_CAMERA=0,SELECT_FILE=1;
+    private boolean normalImg = true;
+
+    private Bitmap mImgBitMap;
 
     //View
-    private Button mSelectImageBtn,mSendBtn;
-    private EditText mIterationEditText;
-    private Spinner mModeSpinner, mFormatSpinner;
-
-    private ImageView mImgChoosen;
+    private Button mSelectImageBtn,mNextBtn;
+    private ImageView mImgChoosen, mImgFixed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,24 +51,30 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
     /**
-     * Initialisation des composants graphique de l'activité
+     * Initialisation of graphics component
      */
     public void initComp(){
 
 
         mSelectImageBtn = (Button) findViewById(R.id.select_btn);
 
-        mSendBtn = (Button) findViewById(R.id.send_btn);
+        mNextBtn = (Button) findViewById(R.id.next_btn);
 
-        mIterationEditText = (EditText) findViewById(R.id.iteration_editText);
+        mImgChoosen = (ImageView) findViewById(R.id.pic_imageView);
 
-        mModeSpinner = (Spinner) findViewById(R.id.spinner_mode);
-
-        mFormatSpinner = (Spinner) findViewById(R.id.spinner_format);
-
-        mImgChoosen = new ImageView(this);
-
-        fillSpinner();
+        mImgChoosen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (normalImg){
+                    mImgChoosen.setImageResource(R.drawable.genie_output_2);
+                    normalImg = false;
+                }
+                else {
+                    mImgChoosen.setImageResource(R.drawable.genie);
+                    normalImg = true;
+                }
+            }
+        });
 
         mSelectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,59 +83,31 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
-        mSendBtn.setOnClickListener(new View.OnClickListener() {
+        mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPic();
+                launchParam();
             }
         });
     }
 
-    /**
-     * Cette fonction ajoute les items aux listes déroulante
-     */
-    public void fillSpinner(){
-
-        ArrayList<String> modeArray = new ArrayList<String>(Arrays.asList("combo", "triangle", "rect", "ellipse", "circle", "rotatedrect", "beziers", "rotatedellipse", "polygon"));
-
-        ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, modeArray);
-
-        ArrayList<String> formatArray = new ArrayList<String>(Arrays.asList("PNG", "JPG", "SVG", "GIF"));
-        ArrayAdapter<String> formatAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, formatArray);
-
-        mModeSpinner.setAdapter(modeAdapter);
-        mFormatSpinner.setAdapter(formatAdapter);
-    }
 
     /**
-     * Envoi de la photo avec les parametres au serveur
+     * This function launch ParamActivity
      */
-    public void sendPic(){
+    public void launchParam(){
 
-        try {
-            int mode = mModeSpinner.getSelectedItemPosition();
-            String format = mFormatSpinner.getSelectedItem().toString();
-            int nbrIteration = Integer.parseInt(mIterationEditText.getText().toString());
+        Log.v(TAG_WELCOME_ACTIVITY, "Go to param Activity");
 
-
-            if(mImgChoosen != null){
-                Log.v(TAG_WELCOME_ACTIVITY,"Photo : "+ mImgChoosen.toString());
-            }
-
-            //TODO Envoi
-
-            Log.v(TAG_WELCOME_ACTIVITY,"Mode : "+mode+" format "+format+" Iteration "+nbrIteration+" photo "+ mImgChoosen.toString());
-        }
-        catch (Exception ex){
-            Log.e(TAG_WELCOME_ACTIVITY, "Error "+ex.getMessage());
-            Toast.makeText(this,"Error : Champ incorrect",Toast.LENGTH_SHORT).show();
-        }
-
+        Intent intentParam = new Intent(this, ParamActivity.class);
+        // Impossible de passer l'image par intent, il faut trouver un autre moyen
+        //intentParam.putExtra("img", mImgBitMap);
+        startActivity(intentParam);
 
     }
 
     /**
-     * Cette fonction récupere l'image à envoyer
+     * This function get pictures to send
      */
     public void getPicture(){
 
@@ -163,7 +138,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     /**
-     * Cette fonction lance la camera pour prendre une photo
+     * This function kaucnh camera to take a pic
      */
     public void launchCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -171,7 +146,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     /**
-     * Cette fonction lance l'explorer de fichier pour selectionner une image
+     * This function laucnh gallery to get a pic
      */
     public void launchExplorer(){
         Intent intent = new Intent();
@@ -181,7 +156,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     /**
-     * Cette fonction est appelé aprés l'envoi d'une Intent
+     * This function called when return from an intent
      * @param requestCode
      * @param resultCode
      * @param data
@@ -219,7 +194,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
     /**
-     * Cette fonction récupère l'image issu de la gallerie
+     * This fucntion retrieve picture from the gallery
      * @param data
      */
     @SuppressWarnings("deprecation")
@@ -232,11 +207,12 @@ public class WelcomeActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        mImgBitMap = bm;
         mImgChoosen.setImageBitmap(bm);
     }
 
     /**
-     * Cette fonction enregistre et récupère l'image prise par l'appareil photo
+     * This function save picture take by camera and retrieve it
      * @param data
      */
     private void onCaptureImageResult(Intent data) {
@@ -259,6 +235,7 @@ public class WelcomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        mImgBitMap = thumbnail;
         mImgChoosen.setImageBitmap(thumbnail);
     }
 

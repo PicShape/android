@@ -2,9 +2,11 @@
     <string name="app_name">PicShape</string>
 
     <string name="welcome_text">Welcome to PicShape !</string>
+    <string name="parameters_text">Parameters</string>
     <string name="mode_text">Mode</string>
     <string name="iteration_text">Iteration</string>
     <string name="format_text">Format</string>
     <string name="select_text">Select a picture</string>
     <string name="send_text">Send</string>
+    <string name="next_text">Next</string>
 </resources>

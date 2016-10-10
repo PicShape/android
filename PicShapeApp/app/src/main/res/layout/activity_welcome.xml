@@ -8,13 +8,21 @@
     android:weightSum="2"
     tools:context="com.example.android.picshape.WelcomeActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
-        android:textSize="48sp"
-        android:padding="20dp"
-        android:text="@string/welcome_text" />
+        android:layout_weight="0.1"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:src="@drawable/logo"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"/>
 
     <Button
         android:id="@+id/select_btn"
@@ -26,59 +34,29 @@
         android:layout_marginRight="40dp"
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textSize="24sp"
-            android:text="@string/mode_text" />
-        <Spinner
+        android:padding="30dp"
+        >
+        <ImageView
+            android:id="@+id/pic_imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/spinner_mode"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textSize="24sp"
-            android:text="@string/iteration_text" />
+            android:layout_height="match_parent"
+            android:src="@drawable/genie"/>
+    </RelativeLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:inputType="text|number"
-            android:text="100"
-            android:ems="10"
-            android:id="@+id/iteration_editText" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textSize="24sp"
-            android:text="@string/format_text" />
 
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner_format" />
 
-    </LinearLayout>
 
     <Button
-        android:id="@+id/send_btn"
+        android:id="@+id/next_btn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:layout_gravity="center_horizontal"
-        android:text="@string/send_text"/>
+        android:text="@string/next_text"/>
+
 </LinearLayout>
