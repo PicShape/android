@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="2"
-    tools:context="com.example.android.picshape.ParamActivity">
+    tools:context="com.example.android.picshape.view.ParamActivity">
 
     <TextView
         android:layout_width="match_parent"

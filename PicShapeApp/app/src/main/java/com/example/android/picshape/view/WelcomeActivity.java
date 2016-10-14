@@ -1,10 +1,15 @@
-package com.example.android.picshape;
+package com.example.android.picshape.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +20,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.picshape.R;
+import com.example.android.picshape.Utility;
+import com.example.android.picshape.dao.PicSingleton;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 
 /**
  * Created by Emerik Bedouin
@@ -33,12 +43,13 @@ public class WelcomeActivity extends AppCompatActivity {
     private String userChoosenTask;
     private int REQUEST_CAMERA=0,SELECT_FILE=1;
     private boolean normalImg = true;
+    private String mImgPath;
 
     private Bitmap mImgBitMap;
 
     //View
     private Button mSelectImageBtn,mNextBtn;
-    private ImageView mImgChoosen, mImgFixed;
+    private ImageView mImgChoosen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +87,12 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
+
+        // Defintion of default pic
+        Drawable drawable = getResources().getDrawable(R.drawable.genie).getCurrent();
+        //PicSingleton.getInstance().setPicToShape(((BitmapDrawable)drawable).getBitmap());
+        //mImgUri = Uri.parse("android.resource://com.example.android/drawable" + R.drawable.genie);
+
         mSelectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +109,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
 
+
+
     /**
      * This function launch ParamActivity
      */
@@ -99,10 +118,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
         Log.v(TAG_WELCOME_ACTIVITY, "Go to param Activity");
 
-        Intent intentParam = new Intent(this, ParamActivity.class);
-        // Impossible de passer l'image par intent, il faut trouver un autre moyen
-        //intentParam.putExtra("img", mImgBitMap);
-        startActivity(intentParam);
+        if(PicSingleton.getInstance().getPicToShape() != null && mImgPath != null) {
+
+            Intent intentParam = new Intent(this, ParamActivity.class);
+            intentParam.putExtra("imgPath", mImgPath);
+            startActivity(intentParam);
+        }
+        else{
+            Toast.makeText(this, "Error select a pic first !",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -118,7 +142,7 @@ public class WelcomeActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result=Utility.checkPermission(WelcomeActivity.this);
+                boolean result= Utility.checkPermission(WelcomeActivity.this);
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask="Take Photo";
                     if(result)
@@ -201,6 +225,9 @@ public class WelcomeActivity extends AppCompatActivity {
     private void onSelectFromGalleryResult(Intent data) {
         Bitmap bm=null;
         if (data != null) {
+
+            mImgPath = getRealPathFromURI_API19(this, data.getData());
+
             try {
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
             } catch (IOException e) {
@@ -208,6 +235,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
         mImgBitMap = bm;
+        PicSingleton.getInstance().setPicToShape(mImgBitMap);
         mImgChoosen.setImageBitmap(bm);
     }
 
@@ -216,6 +244,8 @@ public class WelcomeActivity extends AppCompatActivity {
      * @param data
      */
     private void onCaptureImageResult(Intent data) {
+
+
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
@@ -235,8 +265,44 @@ public class WelcomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+        mImgPath = destination.getPath();
         mImgBitMap = thumbnail;
+        PicSingleton.getInstance().setPicToShape(mImgBitMap);
         mImgChoosen.setImageBitmap(thumbnail);
+
+
+
+    }
+
+    /**
+     * This function get real path from an Uri
+     * @param context
+     * @param uri
+     * @return
+     */
+    public static String getRealPathFromURI_API19(Context context, Uri uri){
+        String filePath = "";
+        String wholeID = DocumentsContract.getDocumentId(uri);
+
+        // Split at colon, use second item in the array
+        String id = wholeID.split(":")[1];
+
+        String[] column = { MediaStore.Images.Media.DATA };
+
+        // where id is equal to
+        String sel = MediaStore.Images.Media._ID + "=?";
+
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, sel, new String[]{ id }, null);
+
+        int columnIndex = cursor.getColumnIndex(column[0]);
+
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
+        }
+        cursor.close();
+        return filePath;
     }
 
 }
