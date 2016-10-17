@@ -8,16 +8,27 @@
     android:weightSum="2"
     tools:context="com.example.android.picshape.view.WelcomeActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"/>
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
-        android:src="@drawable/logo"/>
+        android:layout_weight="0.6"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/back_welcome"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/logo2"/>
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
@@ -37,15 +48,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="30dp"
+        android:layout_weight="0.9"
+        android:padding="25dp"
         >
+
         <ImageView
             android:id="@+id/pic_imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/genie"/>
-
 
     </RelativeLayout>
 
@@ -55,14 +66,14 @@
 
     <Button
         android:id="@+id/next_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/next_text"/>
-
-    <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.05"/>
+        android:layout_weight="0.25"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button"
+        android:textSize="18sp"
+        android:text="@string/next_text"
+        android:textColor="@android:color/white"/>
+
+
 </LinearLayout>

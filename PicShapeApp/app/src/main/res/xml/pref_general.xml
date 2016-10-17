@@ -1,0 +1,12 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="@string/pref_url_default"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_url_label"
+        android:key="@string/pref_url_key" />
+
+    <Preference
+        android:key="button_key"
+        android:title="Back to default URL"></Preference>
+</PreferenceScreen>

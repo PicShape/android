@@ -1,6 +1,7 @@
 package com.example.android.picshape.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -14,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -58,6 +61,7 @@ public class ParamActivity extends AppCompatActivity {
     private Button mSelectImageBtn,mSendBtn;
     private EditText mIterationEditText;
     private Spinner mModeSpinner, mFormatSpinner;
+    private ImageView mMinImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,42 @@ public class ParamActivity extends AppCompatActivity {
 
         initComp();
 
-        getUriByIntent();
+        if ( getUriByIntent() ) setMinImageView();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.welcome_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+
+            settings();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This function launch Settings activity
+     */
+    public void settings(){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        if(intent.resolveActivity(this.getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     /**
@@ -85,6 +124,7 @@ public class ParamActivity extends AppCompatActivity {
 
         mFormatSpinner = (Spinner) findViewById(R.id.spinner_format);
 
+        mMinImageView = (ImageView) findViewById(R.id.miniature_imageView);
 
 
         fillSpinner();
@@ -117,16 +157,26 @@ public class ParamActivity extends AppCompatActivity {
     /**
      * This function get Uri of image passed by intent
      */
-    public void getUriByIntent(){
+    public boolean getUriByIntent(){
         Bundle extras = getIntent().getExtras();
 
         if (extras != null){
             mSourceFilePath = extras.getString("imgPath");
             Log.v(TAG_PARAM_ACTIVITY,"Get it "+mSourceFilePath);
+            return true;
         }
         else{
             Toast.makeText(this,"No pic passed as parameter", Toast.LENGTH_SHORT).show();
+            return false;
         }
+    }
+
+    /**
+     * This function change miniature ImageView with the Picture passed by parameters
+     */
+    public void setMinImageView(){
+
+        mMinImageView.setImageBitmap(PicSingleton.getInstance().getPicToShape());
     }
 
     /**
@@ -193,6 +243,18 @@ public class ParamActivity extends AppCompatActivity {
     }
 
     /**
+     * This function get WebService URL from preferences
+     * @return
+     */
+    public String getWebServiceUrl(){
+        // Retrieve URL from preferences
+        SharedPreferences preferences =  PreferenceManager.getDefaultSharedPreferences(this);
+        String url = preferences.getString(getString(R.string.pref_url_key),getString(R.string.pref_url_default));
+
+        return url;
+    }
+
+    /**
      * This class manages the http call to webService
      */
     class FetchPicTask extends AsyncTask<String, Void, Integer> {
@@ -236,18 +298,15 @@ public class ParamActivity extends AppCompatActivity {
 
             try {
 
-                String authority = "192.168.43.233";
+                /*String authority = "192.168.43.233";
                 String port = "8080";
                 Uri.Builder builder;
                 builder = Uri.parse("http://"+authority+":"+port).buildUpon();
                 builder.appendPath("api")
                         .appendPath("photos")
                         .appendPath("upload");
-
-                //TODO configurer l'url en paramètre ?
-                //String urlString = "http://192.168.0.12:8080/api/photos/upload";
-                //String urlString = "http://192.168.43.233:8080/api/photos/upload";
-                String urlString = builder.build().toString();
+                String urlString = builder.build().toString();*/
+                String urlString = getWebServiceUrl();
 
                 URL url = new URL(urlString);
 

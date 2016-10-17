@@ -6,12 +6,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="2"
+
     tools:context="com.example.android.picshape.view.ParamActivity">
 
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"/>
+
+    <ImageView
+        android:id="@+id/miniature_imageView"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/genie"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_weight="0.3"
         android:textSize="32sp"
         android:textColor="@color/primary_text"
         android:padding="20dp"
@@ -23,17 +36,38 @@
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.1"
+        android:weightSum="1"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" >
 
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"/>
+
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.35"
             android:id="@+id/progressBar"
             />
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:gravity="center_horizontal"
+            android:textColor="@color/accent"
+            android:textSize="20sp"
+            android:textAllCaps="true"
+            android:text="Let's the magic begin"/>
 
     </LinearLayout>
 
@@ -41,7 +75,7 @@
         android:id="@+id/parameters_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.1"
         android:orientation="vertical"
         android:padding="20dp">
 
@@ -57,6 +91,10 @@
             android:layout_marginBottom="10dp"
             android:id="@+id/spinner_mode"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,13 +124,21 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinner_format" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/send_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/button"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
         android:text="@string/send_text"/>
 </LinearLayout>
