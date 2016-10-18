@@ -3,17 +3,13 @@ package com.example.android.picshape.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +25,6 @@ import android.widget.Toast;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.PicSingleton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,7 +37,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -61,7 +55,7 @@ public class ParamActivity extends AppCompatActivity {
     private Button mSelectImageBtn,mSendBtn;
     private EditText mIterationEditText;
     private Spinner mModeSpinner, mFormatSpinner;
-    private ImageView mMinImageView;
+    private ImageView mMinImageView, mPicReceivedImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,11 +156,10 @@ public class ParamActivity extends AppCompatActivity {
 
         if (extras != null){
             mSourceFilePath = extras.getString("imgPath");
-            Log.v(TAG_PARAM_ACTIVITY,"Get it "+mSourceFilePath);
             return true;
         }
         else{
-            Toast.makeText(this,"No pic passed as parameter", Toast.LENGTH_SHORT).show();
+            showToast("No picture passed as parameter");
             return false;
         }
     }
@@ -243,6 +236,23 @@ public class ParamActivity extends AppCompatActivity {
     }
 
     /**
+     * This function show pic received to the user
+     */
+    public void showPicReceived(Drawable pic){
+
+        mPicReceivedImageView.setImageDrawable(pic);
+
+        LinearLayout paramLayout = (LinearLayout) findViewById(R.id.parameters_layout);
+        LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progress_layout);
+        LinearLayout pictureLayout = (LinearLayout) findViewById(R.id.picture_layout);
+
+        paramLayout.setVisibility(View.GONE);
+        progressLayout.setVisibility(View.GONE);
+        pictureLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    /**
      * This function get WebService URL from preferences
      * @return
      */
@@ -269,7 +279,8 @@ public class ParamActivity extends AppCompatActivity {
     class FetchPicTask extends AsyncTask<String, Void, Integer> {
 
         private final String LOG_TAG = FetchPicTask.class.getName();
-        private String urlToThePic;
+        private String mUrlToThePic;
+        private Drawable mPicReceived;
 
 
         /**
@@ -290,17 +301,16 @@ public class ParamActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(String[] params){
 
-            int send = -1;
-            int get = -1;
+            int send;
+            int get;
             send = sendPic();
 
-            if(send != -1 && urlToThePic != null){
+            if(send != -1 && mUrlToThePic != null){
 
-                Log.v(LOG_TAG, "url : "+urlToThePic);
+                Log.v(LOG_TAG, "url : "+ mUrlToThePic);
                 get = getPic();
 
                 if(get != -1){
-                    //TODO we get the pic go show in the UI
 
                     return 0;
                 }
@@ -321,7 +331,7 @@ public class ParamActivity extends AppCompatActivity {
 
             if(result != null) {
 
-                //TODO Show the pic !
+                showPicReceived(mPicReceived);
 
                 Log.v(LOG_TAG, "Result code "+result);
                 showToast("Pic sent whith succes !");
@@ -478,8 +488,17 @@ public class ParamActivity extends AppCompatActivity {
         protected int getPic(){
 
             //TODO make http request to get picture
+            try {
+                InputStream is = (InputStream) new URL(mUrlToThePic).getContent();
+                mPicReceived = Drawable.createFromStream(is, "src name");
 
-            return -1;
+                return 0;
+
+            } catch (Exception e) {
+                Log.v(LOG_TAG, "Error can't get Picture "+e.getMessage());
+                return -1;
+            }
+
         }
 
         /**
@@ -490,7 +509,7 @@ public class ParamActivity extends AppCompatActivity {
             //parse JSON data
             try {
                 JSONObject jObject = new JSONObject(jsonString);
-                    urlToThePic = jObject.getString("url");
+                    mUrlToThePic = jObject.getString("url");
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());

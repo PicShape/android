@@ -254,7 +254,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
     /**
-     * This fucntion retrieve picture from the gallery
+     * This function retrieve picture from the gallery
      * @param data
      */
     @SuppressWarnings("deprecation")

@@ -31,6 +31,24 @@
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/parameters_text" />
 
+    <LinearLayout
+        android:id="@+id/picture_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.1"
+        android:weightSum="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/picreceived_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/genie2"/>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/progress_layout"
