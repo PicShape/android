@@ -255,11 +255,21 @@ public class ParamActivity extends AppCompatActivity {
     }
 
     /**
+     * This function show Toast to inform user in ParamActivity
+     */
+    public void showToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    /**
      * This class manages the http call to webService
      */
     class FetchPicTask extends AsyncTask<String, Void, Integer> {
 
         private final String LOG_TAG = FetchPicTask.class.getName();
+        private String urlToThePic;
 
 
         /**
@@ -279,6 +289,54 @@ public class ParamActivity extends AppCompatActivity {
          */
         @Override
         protected Integer doInBackground(String[] params){
+
+            int send = -1;
+            int get = -1;
+            send = sendPic();
+
+            if(send != -1 && urlToThePic != null){
+
+                Log.v(LOG_TAG, "url : "+urlToThePic);
+                get = getPic();
+
+                if(get != -1){
+                    //TODO we get the pic go show in the UI
+
+                    return 0;
+                }
+            }
+
+            return -1;
+        }
+
+
+        /**
+         * This function is called after the end of doInBackground method
+         * @param result
+         */
+        @Override
+        protected void onPostExecute(Integer result) {
+
+            loading(false);
+
+            if(result != null) {
+
+                //TODO Show the pic !
+
+                Log.v(LOG_TAG, "Result code "+result);
+                showToast("Pic sent whith succes !");
+            }
+            else{
+                Log.v(LOG_TAG, "Error connection failed code "+result);
+            }
+        }
+
+
+        /**
+         * This function send picture to server to be converted
+         * @return code 0 OK | -1 NOK
+         */
+        protected int sendPic(){
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -298,14 +356,6 @@ public class ParamActivity extends AppCompatActivity {
 
             try {
 
-                /*String authority = "192.168.43.233";
-                String port = "8080";
-                Uri.Builder builder;
-                builder = Uri.parse("http://"+authority+":"+port).buildUpon();
-                builder.appendPath("api")
-                        .appendPath("photos")
-                        .appendPath("upload");
-                String urlString = builder.build().toString();*/
                 String urlString = getWebServiceUrl();
 
                 URL url = new URL(urlString);
@@ -323,7 +373,7 @@ public class ParamActivity extends AppCompatActivity {
                 urlConnection.setRequestProperty("Connection", "Keep-Alive");
                 urlConnection.setRequestProperty("ENCTYPE", "multipart/form-data");
                 urlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                urlConnection.setRequestProperty("photo", fileName);
+                urlConnection.setRequestProperty("photo", fileName); // Useless ?
 
 
                 dos = new DataOutputStream(urlConnection.getOutputStream());
@@ -357,16 +407,38 @@ public class ParamActivity extends AppCompatActivity {
                 dos.writeBytes(lineEnd);
                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
+                // TODO Parameters
+
                 // Fin de l'envoi
 
                 // Responses from the server (code and message)
                 serverResponseCode = urlConnection.getResponseCode();
                 String serverResponseMessage = urlConnection.getResponseMessage();
 
+
                 Log.i("uploadFile", "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
 
                 if(serverResponseCode == 200){
-                    Toast.makeText(ParamActivity.this, "Pic sent !", Toast.LENGTH_SHORT).show();
+                    Log.v(LOG_TAG, "Request success !");
+
+                    // We get the returned from the request
+                    String returnedJSON;
+
+                    InputStream is = urlConnection.getInputStream();
+
+                    BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                    StringBuilder sBuilder = new StringBuilder();
+
+                    String line = null;
+                    while ((line = bReader.readLine()) != null) {
+                        sBuilder.append(line + "\n");
+                    }
+
+                    is.close();
+                    returnedJSON = sBuilder.toString();
+
+                    // Retrieve url from JSON
+                    getUrlFromJSON(returnedJSON);
                 }
 
                 //close the streams //
@@ -378,9 +450,8 @@ public class ParamActivity extends AppCompatActivity {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error "+e.getMessage(), e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
-                return null;
+
+                return -1;
             }
             finally{
                 if (urlConnection != null) {
@@ -397,27 +468,32 @@ public class ParamActivity extends AppCompatActivity {
                 }
             }
 
-            return null;
+            return -1;
         }
 
+        /**
+         * This function get the pic converted from the server
+         * @return code 0 OK | -1 NOK
+         */
+        protected int getPic(){
+
+            //TODO make http request to get picture
+
+            return -1;
+        }
 
         /**
-         * This function is called after the end of doInBackground method
-         * @param result
+         * This function get the URL from JSON String
+         * @param jsonString
          */
-        @Override
-        protected void onPostExecute(Integer result) {
+        protected void getUrlFromJSON(String jsonString){
+            //parse JSON data
+            try {
+                JSONObject jObject = new JSONObject(jsonString);
+                    urlToThePic = jObject.getString("url");
 
-            loading(false);
-
-            if(result != null) {
-
-                //TODO get the pic !
-
-                Log.v(LOG_TAG, "Result code "+result);
-            }
-            else{
-                Log.v(LOG_TAG, "Error connection failed");
+            } catch (JSONException e) {
+                Log.e("JSONException", "Error: " + e.toString());
             }
         }
 

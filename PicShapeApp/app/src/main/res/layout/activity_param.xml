@@ -67,7 +67,7 @@
             android:textColor="@color/accent"
             android:textSize="20sp"
             android:textAllCaps="true"
-            android:text="Let's the magic begin"/>
+            android:text="Let the magic begin"/>
 
     </LinearLayout>
 
