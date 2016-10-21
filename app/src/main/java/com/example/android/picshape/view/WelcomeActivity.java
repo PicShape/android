@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -281,31 +282,17 @@ public class WelcomeActivity extends AppCompatActivity {
      */
     private void onCaptureImageResult(Intent data) {
 
+        Bitmap picCaptured = (Bitmap) data.getExtras().get("data");
 
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), picCaptured,"pichsape"+ System.currentTimeMillis(), "PicShape");
+        Uri uriPath = Uri.parse(path);
 
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
+        mImgPath = getRealPathFromURI(uriPath);
 
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        mImgPath = destination.getPath();
-        mImgBitMap = thumbnail;
+        mImgBitMap = picCaptured;
         PicSingleton.getInstance().setPicToShape(mImgBitMap);
-        mImgChoosen.setImageBitmap(thumbnail);
+        mImgChoosen.setImageBitmap(picCaptured);
+
 
 
 
@@ -318,6 +305,7 @@ public class WelcomeActivity extends AppCompatActivity {
      * @return
      */
     public static String getRealPathFromURI_API19(Context context, Uri uri){
+
         String filePath = "";
         String wholeID = DocumentsContract.getDocumentId(uri);
 
@@ -339,6 +327,13 @@ public class WelcomeActivity extends AppCompatActivity {
         }
         cursor.close();
         return filePath;
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
 }
