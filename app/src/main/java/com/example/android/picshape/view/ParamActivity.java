@@ -120,6 +120,7 @@ public class ParamActivity extends AppCompatActivity {
 
         mMinImageView = (ImageView) findViewById(R.id.miniature_imageView);
 
+        mPicReceivedImageView = (ImageView) findViewById(R.id.picreceived_imageview);
 
         fillSpinner();
 
@@ -250,6 +251,20 @@ public class ParamActivity extends AppCompatActivity {
         progressLayout.setVisibility(View.GONE);
         pictureLayout.setVisibility(View.VISIBLE);
 
+        // Other solution with another activity
+        PicSingleton.getInstance().setPicShaped(pic);
+
+        launchResultActivity();
+
+    }
+
+    /**
+     * This function launch Result Activity
+     */
+    public void launchResultActivity(){
+        Intent resultIntent = new Intent(this, ResultActivity.class);
+        startActivity(resultIntent);
+
     }
 
     /**
@@ -334,7 +349,7 @@ public class ParamActivity extends AppCompatActivity {
                 showPicReceived(mPicReceived);
 
                 Log.v(LOG_TAG, "Result code "+result);
-                showToast("Pic sent whith succes !");
+                showToast("Pic sent with success !");
             }
             else{
                 Log.v(LOG_TAG, "Error connection failed code "+result);
@@ -509,7 +524,7 @@ public class ParamActivity extends AppCompatActivity {
             //parse JSON data
             try {
                 JSONObject jObject = new JSONObject(jsonString);
-                    mUrlToThePic = jObject.getString("url");
+                mUrlToThePic = jObject.getString("url");
 
             } catch (JSONException e) {
                 Log.e("JSONException", "Error: " + e.toString());

@@ -1,6 +1,7 @@
 package com.example.android.picshape.dao;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 /**
  * Copyright (C) 2016 Emerik Bedouin - All Rights Reserved
@@ -9,8 +10,9 @@ import android.graphics.Bitmap;
 
 public class PicSingleton {
 
-    private static PicSingleton instance;
-    private static Bitmap picToShape;
+    private static PicSingleton mInstance;
+    private static Bitmap mPicToShape;
+    private static Drawable mPicShape;
 
 
     private PicSingleton(){
@@ -18,15 +20,23 @@ public class PicSingleton {
     }
 
     public static PicSingleton getInstance(){
-        if (instance == null) return new PicSingleton();
-        else return instance;
+        if (mInstance == null) return new PicSingleton();
+        else return mInstance;
     }
 
     public Bitmap getPicToShape() {
-        return picToShape;
+        return mPicToShape;
     }
 
     public void setPicToShape(Bitmap picToShape) {
-        this.picToShape = picToShape;
+        this.mPicToShape = picToShape;
+    }
+
+    public static Drawable getPicShaped() {
+        return mPicShape;
+    }
+
+    public static void setPicShaped(Drawable mPicShape) {
+        PicSingleton.mPicShape = mPicShape;
     }
 }

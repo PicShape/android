@@ -11,6 +11,10 @@
     <string name="next_text">Next</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Result -->
+    <string name="result_text">What a result</string>
+    <string name="touch_original_text">Touch to see original</string>
+
     <!-- Strings related to Settings -->
     <string name="action_settings">Settings</string>
 
@@ -19,7 +23,6 @@
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
-
 
 
     <!-- Label for the url preference [CHAR LIMIT=30] -->
