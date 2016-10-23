@@ -6,16 +6,12 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
-import com.example.android.picshape.Utility;
+
 import com.example.android.picshape.dao.PicSingleton;
 
 public class ResultActivity extends AppCompatActivity {
@@ -80,10 +76,17 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function shows text on UI
+     * @param text
+     */
     public void showToast(String text){
         Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This function shows dialog to save picture to memory
+     */
     public void showSaveDialog(){
         final CharSequence[] items = { "Save Photo", "Cancel" };
         AlertDialog.Builder builder = new AlertDialog.Builder(ResultActivity.this);
@@ -104,6 +107,10 @@ public class ResultActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * This function saves picture on memory
+     * @return
+     */
     public boolean savePicture(){
         String path = MediaStore.Images.Media.insertImage(getContentResolver(),
                 ((BitmapDrawable)PicSingleton.getInstance().getPicShaped()).getBitmap(),

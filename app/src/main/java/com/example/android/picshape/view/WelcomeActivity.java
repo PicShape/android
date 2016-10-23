@@ -1,6 +1,5 @@
 package com.example.android.picshape.view;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,10 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,10 +23,6 @@ import com.example.android.picshape.R;
 import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.PicSingleton;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -46,7 +38,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private String userChoosenTask;
     private int REQUEST_CAMERA=0,SELECT_FILE=1;
     private boolean normalImg = true;
-    private String mImgPath;
 
     private Bitmap mImgBitMap;
 
@@ -155,10 +146,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
         Log.v(TAG_WELCOME_ACTIVITY, "Go to param Activity");
 
-        if(PicSingleton.getInstance().getPicToShape() != null && mImgPath != null) {
+        if(PicSingleton.getInstance().getPicToShape() != null ) {
 
             Intent intentParam = new Intent(this, ParamActivity.class);
-            intentParam.putExtra("imgPath", mImgPath);
             startActivity(intentParam);
         }
         else{
@@ -263,12 +253,16 @@ public class WelcomeActivity extends AppCompatActivity {
         Bitmap bm=null;
         if (data != null) {
 
-            mImgPath = getRealPathFromURI_API19(this, data.getData());
-
             try {
+
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
+            }
+            catch (IllegalArgumentException ex){
+                ex.printStackTrace();
+                Toast.makeText(this,"Erro : can't retrieve picture",Toast.LENGTH_SHORT).show();
             }
         }
         mImgBitMap = bm;
@@ -283,12 +277,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private void onCaptureImageResult(Intent data) {
 
         Bitmap picCaptured = (Bitmap) data.getExtras().get("data");
-
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(), picCaptured,"pichsape"+ System.currentTimeMillis(), "PicShape");
-        Uri uriPath = Uri.parse(path);
-
-        mImgPath = getRealPathFromURI(uriPath);
-
         mImgBitMap = picCaptured;
         PicSingleton.getInstance().setPicToShape(mImgBitMap);
         mImgChoosen.setImageBitmap(picCaptured);
@@ -297,43 +285,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
     }
-
-    /**
-     * This function get real path from an Uri
-     * @param context
-     * @param uri
-     * @return
-     */
-    public static String getRealPathFromURI_API19(Context context, Uri uri){
-
-        String filePath = "";
-        String wholeID = DocumentsContract.getDocumentId(uri);
-
-        // Split at colon, use second item in the array
-        String id = wholeID.split(":")[1];
-
-        String[] column = { MediaStore.Images.Media.DATA };
-
-        // where id is equal to
-        String sel = MediaStore.Images.Media._ID + "=?";
-
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, sel, new String[]{ id }, null);
-
-        int columnIndex = cursor.getColumnIndex(column[0]);
-
-        if (cursor.moveToFirst()) {
-            filePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-        return filePath;
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
+    
 
 }

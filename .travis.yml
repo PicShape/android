@@ -33,3 +33,5 @@ script:
    - ./gradlew build connectedCheck
 os:
    - linux
+notifications:
+  slack: leconseil:Q3qnyUxsDaGi86Z6l25io2FW

@@ -3,10 +3,12 @@ package com.example.android.picshape.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,14 +34,16 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
+
 
 /**
  * Created by Emerik Bedouin
@@ -49,7 +53,6 @@ public class ParamActivity extends AppCompatActivity {
 
     final private String TAG_PARAM_ACTIVITY = "PARAM ACTIVITY";
 
-    private String mSourceFilePath;
 
     //View
     private Button mSelectImageBtn,mSendBtn;
@@ -64,7 +67,7 @@ public class ParamActivity extends AppCompatActivity {
 
         initComp();
 
-        if ( getUriByIntent() ) setMinImageView();
+        if ( PicSingleton.getInstance().getPicToShape() != null ) setMinImageView();
 
     }
 
@@ -147,22 +150,6 @@ public class ParamActivity extends AppCompatActivity {
 
         mModeSpinner.setAdapter(modeAdapter);
         mFormatSpinner.setAdapter(formatAdapter);
-    }
-
-    /**
-     * This function get Uri of image passed by intent
-     */
-    public boolean getUriByIntent(){
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null){
-            mSourceFilePath = extras.getString("imgPath");
-            return true;
-        }
-        else{
-            showToast("No picture passed as parameter");
-            return false;
-        }
     }
 
     /**
@@ -356,17 +343,48 @@ public class ParamActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * This function create a file and return its path
+         * @param pic
+         * @return
+         */
+        public String createTempFile(Bitmap pic){
+
+            String path = Environment.getExternalStorageDirectory()+"/tempPicToShape.png";
+            File file = new File(path);
+            try {
+                FileOutputStream fOut = new FileOutputStream(file);
+
+                if (pic.compress(Bitmap.CompressFormat.PNG, 100, fOut)) return path;
+
+                fOut.close();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        /**
+         * This function delete file passed in parameter
+         * @return
+         */
+        public boolean deleteTempFile(String filePath){
+
+            File file = new File(filePath);
+            return file.delete();
+
+        }
+
 
         /**
          * This function send picture to server to be converted
          * @return code 0 OK | -1 NOK
          */
         protected int sendPic(){
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
 
+            HttpURLConnection urlConnection = null;
             DataOutputStream dos = null;
             String lineEnd = "\r\n";
             String twoHyphens = "--";
@@ -374,9 +392,8 @@ public class ParamActivity extends AppCompatActivity {
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
             int maxBufferSize = 1 * 1024 * 1024;
-            File sourceFile = new File(mSourceFilePath);
-            String fileName = getNameFromPath(mSourceFilePath);
             int serverResponseCode = 0;
+            String path = null;
 
 
             try {
@@ -389,7 +406,6 @@ public class ParamActivity extends AppCompatActivity {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 Log.i(LOG_TAG,"url : "+urlConnection.getURL());
 
-                FileInputStream fileInputStream = new FileInputStream(sourceFile);
 
                 urlConnection.setDoInput(true); // Allow Inputs
                 urlConnection.setDoOutput(true); // Allow Outputs
@@ -398,41 +414,66 @@ public class ParamActivity extends AppCompatActivity {
                 urlConnection.setRequestProperty("Connection", "Keep-Alive");
                 urlConnection.setRequestProperty("ENCTYPE", "multipart/form-data");
                 urlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                urlConnection.setRequestProperty("photo", fileName); // Useless ?
+                urlConnection.setRequestProperty("photo", "PicToShape"); // Useless ?
 
+
+
+                // Post of the file
 
                 dos = new DataOutputStream(urlConnection.getOutputStream());
 
                 dos.writeBytes(twoHyphens + boundary + lineEnd);
                 dos.writeBytes("Content-Disposition: form-data;name=\"photo\";filename=\""
-                        + fileName + "\"" + lineEnd);
+                        + "PicToShape" + "\"" + lineEnd);
                 dos.writeBytes("Content-Type: image/png" + lineEnd); // To change if PNG doesn't match with file
 
                 dos.writeBytes(lineEnd);
 
-                // create a buffer of  maximum size
-                bytesAvailable = fileInputStream.available();
 
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                buffer = new byte[bufferSize];
+                Bitmap bitmapPic = PicSingleton.getInstance().getPicToShape();
 
-                // read file and write it into form...
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                path = createTempFile(bitmapPic);
 
-                while (bytesRead > 0) {
+                if (path != null){
 
-                    dos.write(buffer, 0, bufferSize);
+                    Log.v(LOG_TAG,"File path temp : "+path);
+
+                    FileInputStream fileInputStream = new FileInputStream(path);
+
+                    // create a buffer of  maximum size
                     bytesAvailable = fileInputStream.available();
+
                     bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+
+                    // read file and write it into form...
                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    while (bytesRead > 0) {
+
+                        dos.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    }
+
+                    //close file stream
+                    fileInputStream.close();
 
                 }
 
-                // send multipart form data necesssary after file data...
+                //----------------------------------------------------------------
+
                 dos.writeBytes(lineEnd);
                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
-                // TODO Parameters
+
+                //close the streams //
+                dos.flush();
+                dos.close();
+
+
 
                 // Fin de l'envoi
 
@@ -466,11 +507,6 @@ public class ParamActivity extends AppCompatActivity {
                     getUrlFromJSON(returnedJSON);
                 }
 
-                //close the streams //
-                fileInputStream.close();
-                dos.flush();
-                dos.close();
-
 
 
             } catch (IOException e) {
@@ -479,18 +515,19 @@ public class ParamActivity extends AppCompatActivity {
                 return -1;
             }
             finally{
+                if (path != null) {
+                    // Delete the temp file
+                    if (deleteTempFile(path)) Log.v(LOG_TAG, "File deleted");
+                    else Log.v(LOG_TAG, "Error File isn't deleted");
+
+                }
+
                 if (urlConnection != null) {
                     urlConnection.disconnect();
 
                     return serverResponseCode;
                 }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
+
             }
 
             return -1;
@@ -531,22 +568,6 @@ public class ParamActivity extends AppCompatActivity {
             }
         }
 
-        /**
-         * This function return file name from its path
-         * @param path
-         * @return
-         */
-        private String getNameFromPath(String path){
-            String name = "";
-
-            StringTokenizer token = new StringTokenizer(path,"/");
-            name = token.toString();
-            while(token.hasMoreElements()){
-                name = token.nextToken();
-            }
-
-            return name;
-        }
 
     }
 
