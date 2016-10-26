@@ -52,7 +52,7 @@ import java.util.Arrays;
 public class ParamActivity extends AppCompatActivity {
 
     final private String TAG_PARAM_ACTIVITY = "PARAM ACTIVITY";
-
+    final private int ITERATION_LIMIT = 500;
 
     //View
     private Button mSelectImageBtn,mSendBtn;
@@ -427,7 +427,8 @@ public class ParamActivity extends AppCompatActivity {
                         dos.writeBytes("Content-Disposition: form-data; name=\"" + mParamIter + "\"" + lineEnd);
                         dos.writeBytes("Content-Type: text/plain" + lineEnd);
                         dos.writeBytes(lineEnd);
-                        dos.writeBytes(iter);
+                        if(Integer.parseInt(iter) <= ITERATION_LIMIT) dos.writeBytes(iter);
+                        else dos.writeBytes(ITERATION_LIMIT+"");
                         dos.writeBytes(lineEnd);
                     }
 
@@ -548,6 +549,10 @@ public class ParamActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, "Error "+e.getMessage(), e);
 
                 return -1;
+            }
+            catch(NumberFormatException e){
+                e.printStackTrace();
+                showToast("Error : Iteration must be a number");
             }
             finally{
                 if (path != null) {

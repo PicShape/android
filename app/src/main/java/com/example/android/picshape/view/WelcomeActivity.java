@@ -200,10 +200,15 @@ public class WelcomeActivity extends AppCompatActivity {
      * This function laucnh gallery to get a pic
      */
     public void launchExplorer(){
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_FILE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_FILE);*/
+
+        Intent galleryIntent = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent , SELECT_FILE );
     }
 
     /**
