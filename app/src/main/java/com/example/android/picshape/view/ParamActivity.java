@@ -58,7 +58,7 @@ public class ParamActivity extends AppCompatActivity {
     private Button mSelectImageBtn,mSendBtn;
     private EditText mIterationEditText;
     private Spinner mModeSpinner, mFormatSpinner;
-    private ImageView mMinImageView, mPicReceivedImageView;
+    private ImageView mMinImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +123,6 @@ public class ParamActivity extends AppCompatActivity {
 
         mMinImageView = (ImageView) findViewById(R.id.miniature_imageView);
 
-        mPicReceivedImageView = (ImageView) findViewById(R.id.picreceived_imageview);
 
         fillSpinner();
 
@@ -141,11 +140,10 @@ public class ParamActivity extends AppCompatActivity {
      */
     public void fillSpinner(){
 
-        ArrayList<String> modeArray = new ArrayList<String>(Arrays.asList("combo", "triangle", "rect", "ellipse", "circle", "rotatedrect", "beziers", "rotatedellipse", "polygon"));
-
+        ArrayList<String> modeArray = new ArrayList<String>(Arrays.asList(getResources().getStringArray((R.array.array_mode))));
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, modeArray);
 
-        ArrayList<String> formatArray = new ArrayList<String>(Arrays.asList("PNG", "JPG", "SVG", "GIF"));
+        ArrayList<String> formatArray = new ArrayList<String>(Arrays.asList(getResources().getStringArray((R.array.array_format))));
         ArrayAdapter<String> formatAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, formatArray);
 
         mModeSpinner.setAdapter(modeAdapter);
@@ -166,9 +164,9 @@ public class ParamActivity extends AppCompatActivity {
     public void sendPic(){
 
         try {
-            int mode = mModeSpinner.getSelectedItemPosition();
+            String mode = mModeSpinner.getSelectedItemPosition()+"";
             String format = mFormatSpinner.getSelectedItem().toString();
-            int nbrIteration = Integer.parseInt(mIterationEditText.getText().toString());
+            String nbrIteration = mIterationEditText.getText().toString();
 
             Log.v(TAG_PARAM_ACTIVITY,"Mode : "+mode+" format "+format+" Iteration "+nbrIteration);
 
@@ -180,7 +178,7 @@ public class ParamActivity extends AppCompatActivity {
             if (networkAvailable()) {
                 // Create task to send the image
                 FetchPicTask task = new FetchPicTask();
-                task.execute();
+                task.execute(nbrIteration, mode, format);
             }
             else {
                 Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
@@ -228,15 +226,11 @@ public class ParamActivity extends AppCompatActivity {
      */
     public void showPicReceived(Drawable pic){
 
-        mPicReceivedImageView.setImageDrawable(pic);
-
         LinearLayout paramLayout = (LinearLayout) findViewById(R.id.parameters_layout);
         LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progress_layout);
-        LinearLayout pictureLayout = (LinearLayout) findViewById(R.id.picture_layout);
-
-        paramLayout.setVisibility(View.GONE);
         progressLayout.setVisibility(View.GONE);
-        pictureLayout.setVisibility(View.VISIBLE);
+        paramLayout.setVisibility(View.VISIBLE);
+
 
         // Other solution with another activity
         PicSingleton.getInstance().setPicShaped(pic);
@@ -283,6 +277,9 @@ public class ParamActivity extends AppCompatActivity {
         private final String LOG_TAG = FetchPicTask.class.getName();
         private String mUrlToThePic;
         private Drawable mPicReceived;
+        private String mParamIter = "iter";
+        private String mParamMode = "mode";
+        private String mParamFmt = "format";
 
 
         /**
@@ -305,7 +302,7 @@ public class ParamActivity extends AppCompatActivity {
 
             int send;
             int get;
-            send = sendPic();
+            send = sendPic(params[0], params[1], params[2]);
 
             if(send != -1 && mUrlToThePic != null){
 
@@ -331,8 +328,9 @@ public class ParamActivity extends AppCompatActivity {
 
             loading(false);
 
-            if(result != null) {
+            if(result != -1) {
 
+                // Display of the converted picture
                 showPicReceived(mPicReceived);
 
                 Log.v(LOG_TAG, "Result code "+result);
@@ -340,6 +338,7 @@ public class ParamActivity extends AppCompatActivity {
             }
             else{
                 Log.v(LOG_TAG, "Error connection failed code "+result);
+                showToast("Error sorry we failed to convert your picture !");
             }
         }
 
@@ -382,7 +381,7 @@ public class ParamActivity extends AppCompatActivity {
          * This function send picture to server to be converted
          * @return code 0 OK | -1 NOK
          */
-        protected int sendPic(){
+        protected int sendPic(String iter, String mode, String format){
 
             HttpURLConnection urlConnection = null;
             DataOutputStream dos = null;
@@ -412,16 +411,49 @@ public class ParamActivity extends AppCompatActivity {
                 urlConnection.setUseCaches(false); // Don't use a Cached Copy
                 urlConnection.setRequestMethod("POST"); // Request type
                 urlConnection.setRequestProperty("Connection", "Keep-Alive");
-                urlConnection.setRequestProperty("ENCTYPE", "multipart/form-data");
                 urlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                urlConnection.setRequestProperty("photo", "PicToShape"); // Useless ?
-
 
 
                 // Post of the file
 
                 dos = new DataOutputStream(urlConnection.getOutputStream());
 
+                dos.writeBytes(lineEnd);
+
+                // Add parameter --------
+                    if(iter != null) {
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        // Iteration number
+                        dos.writeBytes("Content-Disposition: form-data; name=\"" + mParamIter + "\"" + lineEnd);
+                        dos.writeBytes("Content-Type: text/plain" + lineEnd);
+                        dos.writeBytes(lineEnd);
+                        dos.writeBytes(iter);
+                        dos.writeBytes(lineEnd);
+                    }
+
+
+                    if(mode != null) {
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        // Mode
+                        dos.writeBytes("Content-Disposition: form-data;name=\"" + mParamMode + "\"" + lineEnd);
+                        dos.writeBytes("Content-Type: text/plain" + lineEnd);
+                        dos.writeBytes(lineEnd);
+                        dos.writeBytes(mode);
+                        dos.writeBytes(lineEnd);
+                    }
+
+                    if(format != null) {
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        // Format
+                        dos.writeBytes("Content-Disposition: form-data;name=\"" + mParamFmt + "\"" + lineEnd);
+                        dos.writeBytes("Content-Type: text/plain" + lineEnd);
+                        dos.writeBytes(lineEnd);
+                        dos.writeBytes(format);
+                        dos.writeBytes(lineEnd);
+                    }
+
+
+                // Picture upload
                 dos.writeBytes(twoHyphens + boundary + lineEnd);
                 dos.writeBytes("Content-Disposition: form-data;name=\"photo\";filename=\""
                         + "PicToShape" + "\"" + lineEnd);
@@ -433,12 +465,13 @@ public class ParamActivity extends AppCompatActivity {
                 Bitmap bitmapPic = PicSingleton.getInstance().getPicToShape();
 
                 path = createTempFile(bitmapPic);
+                FileInputStream fileInputStream = null;
 
                 if (path != null){
 
                     Log.v(LOG_TAG,"File path temp : "+path);
 
-                    FileInputStream fileInputStream = new FileInputStream(path);
+                    fileInputStream = new FileInputStream(path);
 
                     // create a buffer of  maximum size
                     bytesAvailable = fileInputStream.available();
@@ -458,21 +491,23 @@ public class ParamActivity extends AppCompatActivity {
 
                     }
 
-                    //close file stream
-                    fileInputStream.close();
+
 
                 }
 
                 //----------------------------------------------------------------
 
+                // Close
                 dos.writeBytes(lineEnd);
                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
+                // End of POST
 
                 //close the streams //
+                //close file stream
+                if(fileInputStream != null) fileInputStream.close();
                 dos.flush();
                 dos.close();
-
 
 
                 // Fin de l'envoi
@@ -495,9 +530,9 @@ public class ParamActivity extends AppCompatActivity {
                     BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
                     StringBuilder sBuilder = new StringBuilder();
 
-                    String line = null;
-                    while ((line = bReader.readLine()) != null) {
-                        sBuilder.append(line + "\n");
+                    String line2 = null;
+                    while ((line2 = bReader.readLine()) != null) {
+                        sBuilder.append(line2 + "\n");
                     }
 
                     is.close();
@@ -523,6 +558,7 @@ public class ParamActivity extends AppCompatActivity {
                 }
 
                 if (urlConnection != null) {
+                    // Close connection
                     urlConnection.disconnect();
 
                     return serverResponseCode;
@@ -539,7 +575,6 @@ public class ParamActivity extends AppCompatActivity {
          */
         protected int getPic(){
 
-            //TODO make http request to get picture
             try {
                 InputStream is = (InputStream) new URL(mUrlToThePic).getContent();
                 mPicReceived = Drawable.createFromStream(is, "src name");
@@ -567,7 +602,6 @@ public class ParamActivity extends AppCompatActivity {
                 Log.e("JSONException", "Error: " + e.toString());
             }
         }
-
 
     }
 

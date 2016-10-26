@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    "combo", "triangle", "rect", "ellipse", "circle", "rotatedrect", "beziers", "rotatedellipse", "polygon"));
+    <string-array name="array_mode">
+        <item>combo</item>
+        <item>triangle</item>
+        <item>rect</item>
+        <item>ellipse</item>
+        <item>circle</item>
+        <item>rotatedrect</item>
+        <item>beziers</item>
+        <item>rotateellipse</item>
+        <item>polygon</item>
+    </string-array>
+
+    <string-array name="array_format">
+        <item>PNG</item>
+        <item>JPG</item>
+        <item>SVG</item>
+        <item>GIF</item>
+    </string-array>
+</resources>
