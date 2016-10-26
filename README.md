@@ -10,17 +10,19 @@ Picshape Android is the mobile application to request image transformation. It i
 
 The project is composed of a front-end, back-end and an Android application. Check https://github.com/PicShape/picshape for more information.
 
-## What amazing thing you can do with PicShape App
+## What amazing things you can do with PicShape App
 
 You can post a picture to PicShape server and you will get a Pic converted in different shape
 
 You can choose what types of shapes you want and how much iterations you want on your pic.
 
-![alt tag](https://raw.github.com/PicShape/android/readme_imgs/param_activity.png)
+
+<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/param_activity.png" width="270" height="480"/>
 
 Example :
 
-![alt tag](https://raw.github.com/PicShape/android/readme_imgs/conversion_sample.gif)
+<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/conversion_sample.gif" width="270" height="480"/>
 
-![alt tag](https://raw.github.com/PicShape/android/readme_imgs/picToShape.png)
-![alt tag](https://raw.github.com/PicShape/android/readme_imgs/picShaped.png)
+<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/picToShape.jpg" width="640" height="360"/>
+<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/picShaped.jpg" width="640" height="360"/>
+
