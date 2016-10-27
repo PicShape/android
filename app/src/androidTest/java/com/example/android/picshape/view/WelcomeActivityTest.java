@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
@@ -34,6 +36,7 @@ import com.example.android.picshape.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +63,25 @@ public class WelcomeActivityTest {
     final private String LOG_TAG = "WELCOME ACTIVITY TEST";
 
     private static final int PERMISSIONS_DIALOG_DELAY = 1500;
+
+
+    @Before
+    public void init(){
+        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        Point[] coordinates = new Point[4];
+        coordinates[0] = new Point(248, 1520);
+        coordinates[1] = new Point(248, 929);
+        coordinates[2] = new Point(796, 1520);
+        coordinates[3] = new Point(796, 929);
+        try {
+            if (!uiDevice.isScreenOn()) {
+                uiDevice.wakeUp();
+                uiDevice.swipe(coordinates, 10);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Rule
     public IntentsTestRule<WelcomeActivity> mActivityTestRule = new IntentsTestRule<>(WelcomeActivity.class);
