@@ -3,10 +3,7 @@ package com.example.android.picshape.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
 import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.PicSingleton;
+import com.example.android.picshape.utility.ExpandAnimation;
 
 import java.io.IOException;
 
@@ -37,8 +37,7 @@ public class WelcomeActivity extends AppCompatActivity {
     boolean result ;
     private String userChoosenTask;
     private int REQUEST_CAMERA=0,SELECT_FILE=1;
-    private boolean normalImg = true;
-
+    private boolean mChoosen = false;
     private Bitmap mImgBitMap;
 
     //View
@@ -104,26 +103,16 @@ public class WelcomeActivity extends AppCompatActivity {
         mImgChoosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (normalImg){
-                    mImgChoosen.setImageResource(R.drawable.genie_output_2);
-                    normalImg = false;
-                }
-                else {
-                    mImgChoosen.setImageResource(R.drawable.genie);
-                    normalImg = true;
-                }
+                showImgChoosen();
+                showHideButton(false);
             }
         });
-
-
-        // Defintion of default pic
-        Drawable drawable = getResources().getDrawable(R.drawable.genie).getCurrent();
-        //PicSingleton.getInstance().setPicToShape(((BitmapDrawable)drawable).getBitmap());
-        //mImgUri = Uri.parse("android.resource://com.example.android/drawable" + R.drawable.genie);
 
         mSelectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(PicSingleton.getInstance().getPicToShape() != null) showHideButton(true);
+                else showHideButton(true);
                 getPicture();
             }
         });
@@ -137,6 +126,56 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This function hide/show select/next button
+     */
+    public void showHideButton(boolean showNext){
+        if(showNext){
+            ((Button) findViewById(R.id.select_btn)).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.next_btn)).setVisibility(View.VISIBLE);
+        }
+        else{
+            ((Button) findViewById(R.id.next_btn)).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.select_btn)).setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * This function show image choosen
+     */
+    public void showImgChoosen(){
+
+        RelativeLayout welcomeLayout = (RelativeLayout) findViewById(R.id.welcome_relativeLayout);
+        RelativeLayout picLayout = (RelativeLayout) findViewById(R.id.pic_layout);
+        TextView instructionTv = (TextView) findViewById(R.id.instruction_textView);
+
+        if( !mChoosen ) {
+            // Reduction of main layout size
+            ExpandAnimation animWelcome = new ExpandAnimation(welcomeLayout, 0.9f, 0.4f);
+            animWelcome.setDuration(1000);
+            welcomeLayout.startAnimation(animWelcome);
+
+            picLayout.setVisibility(View.VISIBLE);
+
+            instructionTv.setText(getString(R.string.touch_change_text));
+
+            mChoosen = true;
+        }
+        else {
+            // Reduction of main layout size
+            ExpandAnimation animWelcome = new ExpandAnimation(welcomeLayout, 0.4f, 0.9f);
+            animWelcome.setDuration(300);
+            welcomeLayout.startAnimation(animWelcome);
+
+            picLayout.setVisibility(View.GONE);
+
+            PicSingleton.getInstance().setPicToShape(null);
+
+            instructionTv.setText(getString(R.string.begin_select_text));
+
+            mChoosen = false;
+        }
+    }
 
 
     /**
@@ -179,10 +218,19 @@ public class WelcomeActivity extends AppCompatActivity {
                     if(result)
                         launchExplorer();
                 } else if (items[item].equals("Cancel")) {
+
                     dialog.dismiss();
                 }
             }
         });
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                showHideButton(false);
+            }
+        });
+
         builder.show();
 
 
@@ -197,7 +245,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     /**
-     * This function laucnh gallery to get a pic
+     * This function launch gallery to get a pic
      */
     public void launchExplorer(){
         Intent intent = new Intent();
@@ -216,12 +264,22 @@ public class WelcomeActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_FILE) {
-                onSelectFromGalleryResult(data);
-            }
-            else if(requestCode == REQUEST_CAMERA){
-                onCaptureImageResult(data);
+
+        if (data == null) {
+            showHideButton(false);
+        }
+        else {
+
+            if (resultCode == RESULT_OK) {
+                if (requestCode == SELECT_FILE) {
+                    onSelectFromGalleryResult(data);
+                    showImgChoosen();
+                } else if (requestCode == REQUEST_CAMERA) {
+                    onCaptureImageResult(data);
+                    showImgChoosen();
+                }
+
+                showHideButton(true);
             }
         }
     }

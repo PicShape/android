@@ -10,6 +10,8 @@
     <string name="send_text">Send</string>
     <string name="next_text">Next</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="begin_select_text">To begin select a Picture</string>
+    <string name="touch_change_text">Touch picture to change</string>
 
     <!-- Result -->
     <string name="result_text">What a result</string>

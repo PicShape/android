@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
@@ -210,14 +211,17 @@ public class ParamActivity extends AppCompatActivity {
 
         LinearLayout paramLayout = (LinearLayout) findViewById(R.id.parameters_layout);
         LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progress_layout);
+        TextView titleTv = (TextView) findViewById(R.id.title_textView);
 
         if(on) {
             paramLayout.setVisibility(View.GONE);
             progressLayout.setVisibility(View.VISIBLE);
+            titleTv.setText("Sending...");
         }
         else{
             progressLayout.setVisibility(View.GONE);
             paramLayout.setVisibility(View.VISIBLE);
+            titleTv.setText("Parameters");
         }
     }
 
@@ -409,6 +413,7 @@ public class ParamActivity extends AppCompatActivity {
                 urlConnection.setDoInput(true); // Allow Inputs
                 urlConnection.setDoOutput(true); // Allow Outputs
                 urlConnection.setUseCaches(false); // Don't use a Cached Copy
+                urlConnection.setConnectTimeout(50000);
                 urlConnection.setRequestMethod("POST"); // Request type
                 urlConnection.setRequestProperty("Connection", "Keep-Alive");
                 urlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
