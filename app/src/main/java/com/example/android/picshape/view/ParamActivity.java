@@ -257,9 +257,12 @@ public class ParamActivity extends AppCompatActivity {
      * @return
      */
     public String getWebServiceUrl(){
+
+        String route = "/api/picshape/convert";
+
         // Retrieve URL from preferences
         SharedPreferences preferences =  PreferenceManager.getDefaultSharedPreferences(this);
-        String url = preferences.getString(getString(R.string.pref_url_key),getString(R.string.pref_url_default));
+        String url = preferences.getString(getString(R.string.pref_url_key),getString(R.string.pref_url_default))+route;
 
         return url;
     }

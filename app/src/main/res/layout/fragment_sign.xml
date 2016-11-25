@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_welcome"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.picshape.view.SignFragment"
+    >
+
+
+    <ImageView
+        android:id="@+id/background_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/back_welcome_picshape"/>
+
+    <ImageView
+        android:id="@+id/logo_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/logo2"/>
+
+    <TextView
+        android:id="@+id/picshape_textView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/logo_imageView"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:textAllCaps="true"
+        android:text="@string/app_name"/>
+
+
+    <Button
+        android:id="@+id/signin_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/signup_btn"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:text="@string/signin_text"
+        />
+    <Button
+        android:id="@+id/signup_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button"
+        android:textSize="16sp"
+        android:text="@string/signup_text"
+        android:textColor="@android:color/white"
+
+        />
+
+</RelativeLayout>

@@ -13,9 +13,27 @@
     <string name="begin_select_text">To begin select a Picture</string>
     <string name="touch_change_text">Touch picture to change</string>
 
+    <string name="modify_text">Modify</string>
+    <string name="delete_text">Delete</string>
+    <string name="forgot_password_text">Forgot your password?</string>
+
+    <!-- Sign strings -->
+    <string name="signin_text">Sign In</string>
+    <string name="signup_text">Sign Up</string>
+
+    <string name="mail_text">Email address</string>
+    <string name="pseudo_text">Pseudo</string>
+    <string name="password_text">Password</string>
+    <string name="new_account_text">New Account</string>
+    <string name="submit_text">Submit</string>
+
     <!-- Result -->
     <string name="result_text">What a result</string>
     <string name="touch_original_text">Touch to see original</string>
+
+    <string name="action_logoff">Log off</string>
+
+    <string name="action_account">Account</string>
 
     <!-- Strings related to Settings -->
     <string name="action_settings">Settings</string>
@@ -32,6 +50,7 @@
     <!-- Key name for storing url in SharedPreferences -->
     <string name="pref_url_key" translatable="false">url</string>
     <!-- Default webservice url for url preference  -->
-    <string name="pref_url_default" translatable="false">https://picshape-engine.herokuapp.com/api/picshape/convert</string>
+    <string name="pref_url_default" translatable="false">https://picshape-engine-develop.herokuapp.com</string>
+
 
 </resources>
