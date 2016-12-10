@@ -9,6 +9,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=23.0.2
     - ANDROID_ABI=armeabi-v7a
     - EMULATOR_API_LEVEL=23
+    - ANDROID_TAG=google_apis
 
 android:
   components:
@@ -17,6 +18,9 @@ android:
     - build-tools-$ANDROID_BUILD_TOOLS_VERSION
     - platform-tools
     - android-$ANDROID_API_LEVEL
+    # For Google APIs
+    - addon-google_apis-google-$ANDROID_API_LEVEL
+    - addon-google_apis-google-$EMULATOR_API_LEVEL
     - extra-google-m2repository
     - extra-android-m2repository
     - extra-android-support
