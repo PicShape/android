@@ -1,9 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        >
+
 <ImageView
     android:id="@+id/image"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-</FrameLayout>
+    android:layout_width="160dp"
+    android:layout_height="160dp"
+    android:src="@drawable/genie"/>
+
+    <RelativeLayout
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/border">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/counter_like_pic_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="32 "/>
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/heart"
+                android:layout_margin="5dp"/>
+            <TextView
+                android:id="@+id/title_pic_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="My sweet summer love"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/last_comment_pic_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="I love this one"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Comments"
+            android:ems="10"
+            android:id="@+id/editText"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>
