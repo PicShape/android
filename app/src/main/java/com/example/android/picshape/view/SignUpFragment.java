@@ -109,11 +109,11 @@ public class SignUpFragment extends Fragment {
     /**
      * This function launch Gallery Activity
      */
-    public void launchGallery(){
-        Intent galleryIntent = new Intent(getActivity(), DeskActivity.class);
+    public void launchDesk(){
+        Intent deskIntent = new Intent(getActivity(), GalleryActivity.class);
 
-        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(galleryIntent);
+        if (deskIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(deskIntent);
         }
     }
 
@@ -187,7 +187,7 @@ public class SignUpFragment extends Fragment {
             if(userAccount != null){
                 AccountSingleton.getInstance().setAccountLoaded(userAccount);
                 AccountAccess.saveProfilJSON(getContext(), userAccount, BuildConfig.SAVE_FILE_NAME);
-                launchGallery();
+                launchDesk();
                 showMsg("PicshapeAccount creation success");
             }
             else {

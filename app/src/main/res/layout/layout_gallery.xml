@@ -14,7 +14,7 @@
     android:src="@drawable/genie"/>
 
     <RelativeLayout
-        android:layout_width="160dp"
+        android:layout_width="180dp"
         android:layout_height="160dp"
         android:gravity="center_vertical">
 
@@ -58,14 +58,10 @@
             android:textColor="@android:color/black"
             android:text="I love this one"/>
 
-        <EditText
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Comments"
-            android:ems="10"
-            android:id="@+id/editText"
-            android:layout_weight="1" />
+            android:text="Comment"/>
 
 
     </LinearLayout>

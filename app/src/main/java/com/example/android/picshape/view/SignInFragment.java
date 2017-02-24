@@ -150,11 +150,11 @@ public class SignInFragment extends Fragment {
     /**
      * This function launch Gallery Activity
      */
-    public void launchGallery(){
-        Intent galleryIntent = new Intent(getActivity(), DeskActivity.class);
+    public void launchDesk(){
+        Intent deskIntent = new Intent(getActivity(), GalleryActivity.class);
 
-        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(galleryIntent);
+        if (deskIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(deskIntent);
         }
     }
 
@@ -251,7 +251,7 @@ public class SignInFragment extends Fragment {
             if("1".equals(mode)){
                 if(userAccount != null){
                     saveAccountInfo(userAccount);
-                    launchGallery();
+                    launchDesk();
                 }
                 else showMsg("Login failed : Check your email and your password");
             }
