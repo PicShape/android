@@ -18,11 +18,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.picshape.BuildConfig;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PicSingleton;
-import com.example.android.picshape.model.Account;
+import com.example.android.picshape.model.PicshapeAccount;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- *
+ * This Fragment
  */
 public class SignInFragment extends Fragment {
 
@@ -93,6 +94,7 @@ public class SignInFragment extends Fragment {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //launchGallery();
                 signIn();
             }
         });
@@ -178,13 +180,27 @@ public class SignInFragment extends Fragment {
     }
 
 
+    public void saveAccountInfo(PicshapeAccount userAccount){
+        AccountSingleton.getInstance().setAccountLoaded(userAccount);
+        PicshapeAccount account;
+        if( AccountAccess.saveProfilJSON(getContext(), userAccount, BuildConfig.SAVE_FILE_NAME) ){
+            Log.v("SIGNIN FRAGMENT", "SUCCESS to save");
+            account = AccountAccess.loadProfilJSON(getContext(), BuildConfig.SAVE_FILE_NAME);
+        }
+        else{
+            showMsg("Failed to save");
+            Log.v("SIGNIN FRAGMENT", "Failed to save");
+        }
+    }
+
+
     /**
      * This class manages the http call to webService
      */
     class SignInTask extends AsyncTask<String, Void, Integer> {
 
         private final String LOG_TAG = SignInFragment.SignInTask.class.getName();
-        private Account userAccount;
+        private PicshapeAccount userAccount;
         private String mode ;
         private boolean forgot = false;
 
@@ -234,7 +250,7 @@ public class SignInFragment extends Fragment {
 
             if("1".equals(mode)){
                 if(userAccount != null){
-                    AccountSingleton.getInstance().setAccountLoaded(userAccount);
+                    saveAccountInfo(userAccount);
                     launchGallery();
                 }
                 else showMsg("Login failed : Check your email and your password");
@@ -243,8 +259,6 @@ public class SignInFragment extends Fragment {
                 if( forgot )showMsg("We sent an email to retrieve your password ");
                 else showMsg("Error we can't find your email in our database");
             }
-
-
 
 
         }

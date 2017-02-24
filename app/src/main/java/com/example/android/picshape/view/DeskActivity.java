@@ -96,7 +96,7 @@ public class DeskActivity extends AppCompatActivity {
     }
 
     /**
-     * This function launch Account activity
+     * This function launch PicshapeAccount activity
      */
     public void account(){
         Intent intent = new Intent(this, AccountActivity.class);

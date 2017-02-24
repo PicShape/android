@@ -7,14 +7,14 @@ import android.view.accessibility.AccessibilityNodeProvider;
  * Created by emerikbedouin on 06/11/2016.
  */
 
-public class Account {
+public class PicshapeAccount {
 
     private int id;
     private String name;
     private String email;
     private String token;
 
-    public Account(int id, String name, String email, String token){
+    public PicshapeAccount(int id, String name, String email, String token){
         this.id = id ;
         this.name = name;
         this.email = email;

@@ -3,7 +3,8 @@ package com.example.android.picshape.dao;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
-import com.example.android.picshape.model.Account;
+import com.example.android.picshape.model.PicshapeAccount;
+
 
 /**
  * Copyright (C) 2016 Emerik Bedouin - All Rights Reserved
@@ -13,7 +14,7 @@ import com.example.android.picshape.model.Account;
 public class AccountSingleton {
 
     private static AccountSingleton mInstance;
-    private static Account accountLoaded;
+    private static PicshapeAccount accountLoaded;
 
 
     private AccountSingleton(){
@@ -25,11 +26,11 @@ public class AccountSingleton {
         else return mInstance;
     }
 
-    public static Account getAccountLoaded() {
+    public static PicshapeAccount getAccountLoaded() {
         return accountLoaded;
     }
 
-    public static void setAccountLoaded(Account accountLoaded) {
+    public static void setAccountLoaded(PicshapeAccount accountLoaded) {
         AccountSingleton.accountLoaded = accountLoaded;
     }
 }

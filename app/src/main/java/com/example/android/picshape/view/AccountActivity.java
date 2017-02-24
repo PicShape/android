@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
-import com.example.android.picshape.model.Account;
+
 
 public class AccountActivity extends AppCompatActivity {
 

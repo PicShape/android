@@ -1,6 +1,7 @@
 package com.example.android.picshape.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.android.picshape.BuildConfig;
 import com.example.android.picshape.R;
+import com.example.android.picshape.dao.AccountAccess;
+import com.example.android.picshape.dao.AccountSingleton;
+import com.example.android.picshape.model.PicshapeAccount;
 
 /**
  * This Class is the base fragment of Connect Activity where users will choose
@@ -39,6 +44,15 @@ public class SignFragment extends Fragment {
 
         initComp(rootView);
 
+
+        // TODO to move ?
+
+        PicshapeAccount account = AccountAccess.loadProfilJSON(getActivity(), BuildConfig.SAVE_FILE_NAME);
+        if (account != null) {
+            AccountSingleton.getInstance().setAccountLoaded(account);
+            launchGallery();
+        }
+
         return rootView;
     }
 
@@ -61,6 +75,17 @@ public class SignFragment extends Fragment {
                 ((ConnectActivity) getActivity()).launchSignUpFragment();
             }
         });
+    }
+
+    /**
+     * This function launch Gallery Activity
+     */
+    public void launchGallery(){
+        Intent galleryIntent = new Intent(getActivity(), DeskActivity.class);
+
+        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(galleryIntent);
+        }
     }
 
 }

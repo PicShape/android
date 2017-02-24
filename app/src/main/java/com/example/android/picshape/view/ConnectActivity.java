@@ -8,9 +8,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.picshape.BuildConfig;
 import com.example.android.picshape.R;
+import com.example.android.picshape.dao.AccountAccess;
+import com.example.android.picshape.dao.AccountSingleton;
+import com.example.android.picshape.model.PicshapeAccount;
+
+import java.io.FileNotFoundException;
 
 public class ConnectActivity extends AppCompatActivity {
+
+
+    private final String LOG_TAG = "CONNECT ACTIVITY";
 
     private ViewPager viewPager;
 
@@ -22,7 +31,9 @@ public class ConnectActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        Log.v("CONNECT ACTIVITY","Launch connect activity");
+        Log.v(LOG_TAG, "Launch connect activity");
+
+
     }
 
     @Override
@@ -60,6 +71,7 @@ public class ConnectActivity extends AppCompatActivity {
     }
 
 
+
     /**
      * This function setup ViewPager with Sign Fragment
      * @param viewPager
@@ -80,7 +92,7 @@ public class ConnectActivity extends AppCompatActivity {
             ((ViewPagerAdapter) viewPager.getAdapter()).removeFragment(1);
         }}
 
-        Log.v("CONNECT ACTIVITY","Creation signIN  ");
+        Log.v(LOG_TAG,"Creation signIN  ");
         ((ViewPagerAdapter) viewPager.getAdapter()).addFragment(new SignInFragment(), "Sign in");
 
         if(viewPager.getAdapter().getCount() > 0) {
@@ -99,7 +111,7 @@ public class ConnectActivity extends AppCompatActivity {
 
         }}
 
-        Log.v("CONNECT ACTIVITY","Creation signUPPPPP");
+        Log.v(LOG_TAG,"Creation signUPPPPP");
         ((ViewPagerAdapter) viewPager.getAdapter()).addFragment(new SignUpFragment(), "Sign up");
         if(viewPager.getAdapter().getCount() > 0) {
             viewPager.setCurrentItem(1);

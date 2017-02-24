@@ -1,12 +1,14 @@
 package com.example.android.picshape.dao;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.android.picshape.R;
-import com.example.android.picshape.model.Account;
+import com.example.android.picshape.Utility;
+import com.example.android.picshape.model.PicshapeAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +16,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,18 +33,25 @@ import java.net.URL;
 
 public class AccountAccess {
 
-    public static Account getAccountByName(String name, String credential){
+    public static PicshapeAccount getAccountByName(String name, String credential){
         // TODO
         return null;
     }
 
-    public static Account getAccountByEmail(String email, String credential){
+    public static PicshapeAccount getAccountByEmail(String email, String credential){
 
         // TODO
         return null;
     }
 
-    public static Account signIn(String urlWebService, String email, String password){
+    /**
+     * This function connect user to the service
+     * @param urlWebService
+     * @param email
+     * @param password
+     * @return
+     */
+    public static PicshapeAccount signIn(String urlWebService, String email, String password){
 
         HttpURLConnection urlConnection = null;
         int serverResponseCode = 0;
@@ -104,7 +115,7 @@ public class AccountAccess {
 
                 urlConnection.disconnect();
 
-                return getAccountFromJSON(returnedJSON);
+                return Utility.getAccountFromJSON(returnedJSON);
             }
 
 
@@ -120,7 +131,16 @@ public class AccountAccess {
         return null;
     }
 
-    public static Account signUp(String urlWebService, String email, String name, String password){
+
+    /**
+     * This function register user to the service
+     * @param urlWebService
+     * @param email
+     * @param name
+     * @param password
+     * @return
+     */
+    public static PicshapeAccount signUp(String urlWebService, String email, String name, String password){
 
         HttpURLConnection urlConnection = null;
         int serverResponseCode = 0;
@@ -183,7 +203,7 @@ public class AccountAccess {
 
                 urlConnection.disconnect();
 
-                return getAccountFromJSON(returnedJSON);
+                return Utility.getAccountFromJSON(returnedJSON);
             }
 
 
@@ -198,6 +218,68 @@ public class AccountAccess {
 
         return null;
     }
+
+
+    /**
+     * Save account on internal memory in JSON
+     * @param context
+     * @param account
+     * @return
+     */
+    public static boolean saveProfilJSON(Context context, PicshapeAccount account, String fileName){
+
+        String data = Utility.getJSONFromAccount(account);
+
+        File file = new File(context.getFilesDir(), fileName);
+
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.write(data.getBytes());
+            outputStream.close();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Load account from internal memory
+     * @param context
+     * @param fileName
+     * @return
+     */
+    public static PicshapeAccount loadProfilJSON(Context context, String fileName){
+
+        String json = null;
+
+        File file = new File(context.getFilesDir(), fileName);
+
+        FileInputStream inputStream;
+
+        try{
+            inputStream = context.openFileInput(fileName);
+            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+
+            json = r.readLine();
+
+            r.close();
+            inputStream.close();
+
+            return Utility.getAccountFromJSON(json);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
 
     public static boolean logOff(){
 
@@ -459,32 +541,18 @@ public class AccountAccess {
         return false;
     }
 
+
+    public static Bitmap getPictureById(int pictureId, PicshapeAccount account){
+
+
+        //TODO
+
+        return null;
+    }
+
     // Utility function
 
-    /**
-     * This function get the account info from JSON String
-     * @param jsonString
-     */
-    protected static Account getAccountFromJSON(String jsonString){
-        //parse JSON data
-        try {
 
-            JSONObject jsonAll = new JSONObject(jsonString);
-
-            JSONObject jObject = jsonAll.getJSONObject("user");
-
-            String name = jObject.getString("name");
-            String email = jObject.getString("email");
-
-            String token = jsonAll.getString("token");
-
-            return new Account(1, name, email, token);
-
-        } catch (JSONException e) {
-            Log.e("JSONException", "Error: " + e.toString());
-            return null;
-        }
-    }
 
     /**
      * This function get the URL from JSON String

@@ -16,10 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.android.picshape.BuildConfig;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
-import com.example.android.picshape.model.Account;
+import com.example.android.picshape.model.PicshapeAccount;
+
 
 /**
  *
@@ -143,7 +145,7 @@ public class SignUpFragment extends Fragment {
     class SignUpTask extends AsyncTask<String, Void, Integer> {
 
         private final String LOG_TAG = SignInFragment.SignInTask.class.getName();
-        private Account userAccount;
+        private PicshapeAccount userAccount;
 
         /**
          * This function is executed befor execution of the task, used to show progress bar
@@ -184,11 +186,12 @@ public class SignUpFragment extends Fragment {
 
             if(userAccount != null){
                 AccountSingleton.getInstance().setAccountLoaded(userAccount);
+                AccountAccess.saveProfilJSON(getContext(), userAccount, BuildConfig.SAVE_FILE_NAME);
                 launchGallery();
-                showMsg("Account creation success");
+                showMsg("PicshapeAccount creation success");
             }
             else {
-                showMsg("Account creation failed : Try again later");
+                showMsg("PicshapeAccount creation failed : Try again later");
             }
 
         }
