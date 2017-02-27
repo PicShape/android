@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.android.picshape.BuildConfig;
@@ -21,6 +23,8 @@ import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.model.PicshapeAccount;
+
+import static android.view.View.GONE;
 
 
 /**
@@ -72,6 +76,7 @@ public class SignUpFragment extends Fragment {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoader();
                 signIn();
             }
         });
@@ -109,12 +114,38 @@ public class SignUpFragment extends Fragment {
     /**
      * This function launch Gallery Activity
      */
-    public void launchGallery(){
-        Intent galleryIntent = new Intent(getActivity(), DeskActivity.class);
+    public void launchDesk(){
+        Intent deskIntent = new Intent(getActivity(), GalleryActivity.class);
 
-        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(galleryIntent);
+        if (deskIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(deskIntent);
         }
+    }
+
+    /**
+     * This function shows loader instead of account info
+     */
+    public void showLoader(){
+
+        LinearLayout formLayout = (LinearLayout) getActivity().findViewById(R.id.signin_form_layout);
+        formLayout.setVisibility(GONE);
+
+        RelativeLayout loaderLayout = (RelativeLayout) getActivity().findViewById(R.id.loader_layout);
+        loaderLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    /**
+     * This function shows loader instead of account info
+     */
+    public void hideLoader(){
+
+        RelativeLayout loaderLayout = (RelativeLayout) getActivity().findViewById(R.id.loader_layout);
+        loaderLayout.setVisibility(View.GONE);
+
+        LinearLayout formLayout = (LinearLayout) getActivity().findViewById(R.id.signin_form_layout);
+        formLayout.setVisibility(View.VISIBLE);
+
     }
 
     /**
@@ -187,11 +218,14 @@ public class SignUpFragment extends Fragment {
             if(userAccount != null){
                 AccountSingleton.getInstance().setAccountLoaded(userAccount);
                 AccountAccess.saveProfilJSON(getContext(), userAccount, BuildConfig.SAVE_FILE_NAME);
-                launchGallery();
-                showMsg("PicshapeAccount creation success");
+                showMsg("Picshape Account creation success");
+
+                launchDesk();
+
             }
             else {
                 showMsg("PicshapeAccount creation failed : Try again later");
+                hideLoader();
             }
 
         }

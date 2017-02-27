@@ -81,7 +81,7 @@ public class SignFragment extends Fragment {
      * This function launch Gallery Activity
      */
     public void launchGallery(){
-        Intent galleryIntent = new Intent(getActivity(), DeskActivity.class);
+        Intent galleryIntent = new Intent(getActivity(), GalleryActivity.class);
 
         if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(galleryIntent);

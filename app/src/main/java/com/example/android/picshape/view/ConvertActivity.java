@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,30 +26,28 @@ import com.example.android.picshape.utility.ExpandAnimation;
 
 import java.io.IOException;
 
-public class DeskActivity extends AppCompatActivity {
+public class ConvertActivity extends AppCompatActivity {
 
     private String userChoosenTask;
     private int REQUEST_CAMERA=0,SELECT_FILE=1;
     private boolean mChoosen = false;
     private Bitmap mImgBitMap;
-
-    // Views
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     private ImageView mImgChoosen;
 
+    // Views
+    private Button mBtnWall, mBtnGallery, mBtnConvert;
+    private Button mSelectImageBtn, mNextBtn;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_desk);
+        setContentView(R.layout.activity_convert);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        initComp();
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,22 +114,74 @@ public class DeskActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * This function setup ViewPager with Sign Fragment
-     * @param viewPager
-     */
-    private void setupViewPager(final ViewPager viewPager) {
-        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new GalleryFragment(), "Gallery");
-        adapter.addFragment(new TakePicFragment(), "PicShapisation");
-        viewPager.setAdapter(adapter);
 
+    /**
+     * Initialisation of graphics component
+     */
+    public void initComp(){
+
+
+        mSelectImageBtn = (Button) findViewById(R.id.select_btn);
+
+        mNextBtn = (Button) findViewById(R.id.next_btn);
+
+        ImageView temp = (ImageView) findViewById(R.id.pic_imageView);
+
+        mImgChoosen =  (ImageView) findViewById(R.id.pic_imageView) ;
+
+
+        mImgChoosen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImgChoosen();
+                showHideButton(false);
+            }
+        });
+
+        mSelectImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(PicSingleton.getInstance().getPicToShape() != null) showHideButton(true);
+                else showHideButton(true);
+                getPicture();
+            }
+        });
+
+        mNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchParam();
+            }
+        });
     }
 
 
+    public void launchWall(View v){
+        Intent galleryIntent = new Intent(this, WallActivity.class);
+
+        if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(galleryIntent);
+        }
+    }
+
+    public void launchGallery(View v){
+        Intent galleryIntent = new Intent(this, GalleryActivity.class);
+
+        if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(galleryIntent);
+        }
+    }
+
+    public void launchConvert(View v){
+        Toast.makeText(this, "You're already on the convert screen", Toast.LENGTH_LONG).show();
+    }
+
+
+
+
     /**
-            * This function hide/show select/next button
-    */
+     * This function hide/show select/next button
+     */
     public void showHideButton(boolean showNext){
         if(showNext){
             ((Button) findViewById(R.id.select_btn)).setVisibility(View.GONE);
@@ -204,12 +252,12 @@ public class DeskActivity extends AppCompatActivity {
 
         final CharSequence[] items = { "Take Photo", "Choose from Library",
                 "Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(DeskActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ConvertActivity.this);
         builder.setTitle("Select a Photo");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result= Utility.checkPermission(DeskActivity.this);
+                boolean result= Utility.checkPermission(ConvertActivity.this);
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask="Take Photo";
                     if(result)
@@ -348,11 +396,4 @@ public class DeskActivity extends AppCompatActivity {
 
     }
 
-    public ImageView getImgChoosen() {
-        return mImgChoosen;
-    }
-
-    public void setImgChoosen(ImageView mChoosen) {
-        this.mImgChoosen = mChoosen;
-    }
 }

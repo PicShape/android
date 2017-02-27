@@ -36,14 +36,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.DeskActivity" />
         <activity android:name=".view.SinglePicActivity" />
         <activity android:name=".view.AccountActivity">
             android:parentActivityName=".DeskActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.DeskActivity" />
+                android:value=".view.GalleryActivity" />
         </activity>
+        <activity android:name=".view.WallActivity" />
+        <activity android:name=".view.ConvertActivity" />
+        <activity android:name=".view.GalleryActivity"></activity>
     </application>
 
 </manifest>

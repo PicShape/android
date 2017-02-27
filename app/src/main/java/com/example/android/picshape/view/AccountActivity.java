@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
+import com.example.android.picshape.model.PicshapeAccount;
 
 
 public class AccountActivity extends AppCompatActivity {
@@ -27,8 +28,12 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         initViews();
+        fillAccountInfo();
     }
 
+    /**
+     * This function initialize View of the activty
+     */
     public void initViews(){
 
         mPseudoEditText = (EditText) findViewById(R.id.pseudo_editText);
@@ -56,6 +61,23 @@ public class AccountActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * This function fills edit text with account info
+     */
+    public void fillAccountInfo(){
+        PicshapeAccount account = AccountSingleton.getInstance().getAccountLoaded();
+
+        if(account != null) {
+            mPseudoEditText.setText(account.getName());
+
+            mEmailEditText.setText(account.getEmail());
+        }
+    }
+
+    /**
+     * This function create a task to modify an account
+     */
     public void modifyAccountInfo(){
         String password = mPasswordEditText.getText().toString();
 
@@ -73,6 +95,9 @@ public class AccountActivity extends AppCompatActivity {
         task.execute(url, token, password, "1");
     }
 
+    /**
+     * This function create a task to delete an account
+     */
     public void deleteAccount(){
         String password = mPasswordEditText.getText().toString();
 
