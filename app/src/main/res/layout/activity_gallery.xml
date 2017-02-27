@@ -13,80 +13,132 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.3"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/counter_friends_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="100 Friends"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            />
+        >
 
         <ImageView
-            android:id="@+id/profile_pic_imageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/back_welcome_picshape"
+            android:alpha="0.3"/>
+
+
+        <!-- Profil picture and Name -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/genie"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/profile_pic_imageView"
-            android:text="Eugénie Bouchard"/>
+            android:layout_centerVertical="true">
+            <ImageView
+                android:id="@+id/profile_pic_imageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/genie"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="Eugénie Bouchard"/>
 
-        <ImageView
-            android:id="@+id/pic_imageView"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/picture"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="5dp"/>
-
-        <TextView
-            android:id="@+id/counter_pic_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10 pictures uploaded"
-            android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/pic_imageView"
-            />
-
-
-        <TextView
-            android:id="@+id/counter_like_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10 Likes"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            />
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/heart"
-            android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/counter_like_textView"
-            android:layout_marginRight="5dp"/>
+        </LinearLayout>
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="2dp"
-        android:background="@color/primary"/>
+
+    <!-- Profil stats -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:background="@color/primary"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginRight="30dp">
+            <ImageView
+                android:id="@+id/pic_imageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/picture"
+                android:layout_marginBottom="5dp"
+                />
+
+            <TextView
+                android:id="@+id/counter_pic_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@android:color/white"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="30dp">
+
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/heart_green"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:id="@+id/counter_like_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12"
+                android:textColor="@android:color/white"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/friends"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:id="@+id/counter_friends_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textColor="@android:color/white"
+                />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
     <!-- Pictures -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6">
+        android:layout_weight="0.5">
 
 
         <GridView
@@ -96,7 +148,7 @@
             android:layout_alignParentStart="true"
             android:id="@+id/gallery_gridView"
 
-            android:numColumns="4"
+            android:numColumns="5"
             android:stretchMode="columnWidth"
             android:gravity="center"
             />
@@ -116,28 +168,28 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/wall_btn"
-            android:background="@drawable/button"
             android:onClick="launchWall"
+            style="@style/ButtonPerso"
             android:text="Wall"
-            android:textColor="@android:color/white"/>
+            />
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/gallery_btn"
-            android:background="@drawable/button"
+            style="@style/ButtonPerso"
             android:onClick="launchGallery"
             android:text="Gallery"
-            android:textColor="@android:color/white"/>
+            />
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/convert_btn"
-            android:background="@drawable/button"
+            style="@style/ButtonPerso"
             android:onClick="launchConvert"
             android:text="Convert"
-            android:textColor="@android:color/white"/>
+            />
     </LinearLayout>
 
 </LinearLayout>

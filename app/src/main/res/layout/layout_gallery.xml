@@ -4,26 +4,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="20dp"
+        android:padding="10dp"
         >
 
 <ImageView
     android:id="@+id/image"
-    android:layout_width="160dp"
+    android:layout_width="0dp"
+    android:layout_weight="3"
     android:layout_height="160dp"
-    android:src="@drawable/genie"/>
+    android:src="@drawable/pictoshape_min"
+    />
 
     <RelativeLayout
-        android:layout_width="180dp"
+        android:layout_width="0dp"
+        android:layout_weight="5"
         android:layout_height="160dp"
         android:gravity="center_vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@drawable/border">
+        android:background="@drawable/border"
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -35,6 +39,7 @@
                 android:id="@+id/counter_like_pic_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:text="32 "/>
 
             <ImageView
@@ -51,6 +56,7 @@
 
         </LinearLayout>
 
+        <!-- To replace with a listView ?-->
         <TextView
             android:id="@+id/last_comment_pic_textView"
             android:layout_width="wrap_content"
@@ -58,10 +64,6 @@
             android:textColor="@android:color/black"
             android:text="I love this one"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Comment"/>
 
 
     </LinearLayout>

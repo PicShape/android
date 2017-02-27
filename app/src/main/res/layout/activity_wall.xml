@@ -7,27 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.picshape.view.WallActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="24sp"
-            android:text="What's new !"/>
-    </LinearLayout>
 
     <ListView
         android:id="@+id/pictures_listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
+        android:layout_weight="0.9"
         />
 
 
@@ -44,28 +29,28 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/wall_btn"
-            android:background="@drawable/button"
             android:onClick="launchWall"
+            style="@style/ButtonPerso"
             android:text="Wall"
-            android:textColor="@android:color/white"/>
+            />
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/gallery_btn"
-            android:background="@drawable/button"
+            style="@style/ButtonPerso"
             android:onClick="launchGallery"
             android:text="Gallery"
-            android:textColor="@android:color/white"/>
+            />
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/convert_btn"
-            android:background="@drawable/button"
+            style="@style/ButtonPerso"
             android:onClick="launchConvert"
             android:text="Convert"
-            android:textColor="@android:color/white"/>
+            />
     </LinearLayout>
 
 </LinearLayout>

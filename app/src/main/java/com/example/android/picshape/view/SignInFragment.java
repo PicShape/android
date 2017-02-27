@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static android.view.View.GONE;
 
 /**
  * This Fragment
@@ -95,6 +99,7 @@ public class SignInFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //launchGallery();
+                showLoader();
                 signIn();
             }
         });
@@ -172,6 +177,8 @@ public class SignInFragment extends Fragment {
     }
 
 
+
+
     /**
      * Thus function show message to the user
      */
@@ -179,7 +186,10 @@ public class SignInFragment extends Fragment {
         Toast.makeText(this.getActivity(),msg,Toast.LENGTH_SHORT).show();
     }
 
-
+    /**
+     * This function save account info into internal memory
+     * @param userAccount
+     */
     public void saveAccountInfo(PicshapeAccount userAccount){
         AccountSingleton.getInstance().setAccountLoaded(userAccount);
         PicshapeAccount account;
@@ -193,6 +203,32 @@ public class SignInFragment extends Fragment {
         }
     }
 
+
+    /**
+     * This function shows loader instead of account info
+     */
+    public void showLoader(){
+
+        LinearLayout formLayout = (LinearLayout) getActivity().findViewById(R.id.signin_form_layout);
+        formLayout.setVisibility(GONE);
+
+        RelativeLayout loaderLayout = (RelativeLayout) getActivity().findViewById(R.id.loader_layout);
+        loaderLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    /**
+     * This function shows loader instead of account info
+     */
+    public void hideLoader(){
+
+        RelativeLayout loaderLayout = (RelativeLayout) getActivity().findViewById(R.id.loader_layout);
+        loaderLayout.setVisibility(View.GONE);
+
+        LinearLayout formLayout = (LinearLayout) getActivity().findViewById(R.id.signin_form_layout);
+        formLayout.setVisibility(View.VISIBLE);
+
+    }
 
     /**
      * This class manages the http call to webService
@@ -253,11 +289,19 @@ public class SignInFragment extends Fragment {
                     saveAccountInfo(userAccount);
                     launchDesk();
                 }
-                else showMsg("Login failed : Check your email and your password");
+                else{
+                    showMsg("Login failed : Check your email and your password");
+                    hideLoader();
+                }
             }
             else if("2".equals(mode)){
-                if( forgot )showMsg("We sent an email to retrieve your password ");
-                else showMsg("Error we can't find your email in our database");
+                if( forgot ){
+                    showMsg("We sent an email to retrieve your password ");
+                }
+                else {
+                    showMsg("Error we can't find your email in our database");
+                }
+                hideLoader();
             }
 
 
