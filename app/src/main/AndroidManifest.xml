@@ -18,7 +18,7 @@
             android:parentActivityName=".DeskActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.DeskActivity" />
+                android:value=".view.GalleryActivity" />
         </activity>
         <activity
             android:name=".view.SettingsActivity"

@@ -13,9 +13,13 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.example.android.picshape.model.PicshapeAccount;
+import com.example.android.picshape.model.PictureShape;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by emerikbedouin on 05/10/2016.
@@ -133,5 +137,40 @@ public class Utility {
         json += "}";
 
         return json;
+    }
+
+
+    /**
+     * This function get PictureShape's from JSON
+     */
+    public static ArrayList<PictureShape> getPicturesFromJSON(String jsonString){
+
+        if(jsonString != null){
+            ArrayList<PictureShape> listOfShape = new ArrayList<>();
+
+
+            JSONObject jsonAll = null;
+            PictureShape tempShape;
+            try {
+
+                JSONArray listUrl = new JSONArray(jsonString);
+
+                for (int i=0; i < listUrl.length() ; i++) {
+                    String thumbnail = listUrl.getJSONObject(i).getString("thumbnail");
+                    String photo = listUrl.getJSONObject(i).getString("photo");
+                    String converted = listUrl.getJSONObject(i).getString("converted");
+
+                    tempShape = new PictureShape("Romain", converted, thumbnail, photo);
+                    listOfShape.add(tempShape);
+                }
+
+                return listOfShape;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 }

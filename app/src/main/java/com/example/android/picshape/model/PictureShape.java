@@ -10,6 +10,9 @@ import android.graphics.Bitmap;
 public class PictureShape {
 
     private String description;
+    private String urlConverted;
+    private String urlPhoto;
+    private String urlThumb;
     private Bitmap picBitmap;
 
     public PictureShape(String description, Bitmap picBitmap){
@@ -17,6 +20,13 @@ public class PictureShape {
         this.picBitmap = picBitmap;
     }
 
+    public PictureShape(String description, String urlConverted, String urlThumb, String urlPhoto) {
+        this.description = description;
+        this.urlConverted = urlConverted;
+        this.urlPhoto = urlPhoto;
+        this.urlThumb = urlThumb;
+        this.picBitmap = null;
+    }
 
     public String getDescription() {
         return description;
@@ -32,5 +42,29 @@ public class PictureShape {
 
     public void setPicBitmap(Bitmap picBitmap) {
         this.picBitmap = picBitmap;
+    }
+
+    public String getUrlThumb() {
+        return urlThumb;
+    }
+
+    public void setUrlThumb(String urlThumb) {
+        this.urlThumb = urlThumb;
+    }
+
+    public String getUrlConverted() {
+        return urlConverted;
+    }
+
+    public void setUrlConverted(String urlConverted) {
+        this.urlConverted = urlConverted;
+    }
+
+    public String getUrlPhoto() {
+        return urlPhoto;
+    }
+
+    public void setUrlPhoto(String urlPhoto) {
+        this.urlPhoto = urlPhoto;
     }
 }

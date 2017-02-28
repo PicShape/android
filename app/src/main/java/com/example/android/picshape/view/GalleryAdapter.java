@@ -1,45 +1,37 @@
 package com.example.android.picshape.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.android.picshape.R;
+import com.bumptech.glide.Glide;
+import com.example.android.picshape.model.PictureShape;
+
+import java.util.List;
 
 /**
- * Created by emerikbedouin on 24/02/2017.
+ * Created by emerikbedouin on 27/02/2017.
  */
 
-public class GalleryAdapter extends BaseAdapter {
+public class GalleryAdapter extends ArrayAdapter<PictureShape> {
 
-
-    private Context mContext;
-
-    public GalleryAdapter(Context c) {
-        mContext = c;
+    public GalleryAdapter(Context context, int resource, List<PictureShape> objects) {
+        super(context, resource, objects);
     }
 
-    public int getCount() {
-        return mThumbIds.length;
-    }
-
-    public Object getItem(int position) {
-        return null;
-    }
-
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    // create a new ImageView for each item referenced by the Adapter
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(getContext());
             imageView.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, 200));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setPadding(2, 2, 2, 2);
@@ -47,14 +39,15 @@ public class GalleryAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(mThumbIds[position]);
-        return imageView;
-    }
+        PictureShape picture = getItem(position);
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.genie,
-            R.drawable.genie_output_2, R.drawable.genie_output_3,
-            R.drawable.pictoshape_min
-    };
+        Glide.with(imageView.getContext())
+                .load(picture.getUrlConverted())
+                .into(imageView);
+
+        //Glide.with(imageView.getContext()).load(picture.getUrlThumb()).into(imageView);
+
+        return imageView;
+
+    }
 }
