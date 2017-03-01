@@ -168,6 +168,8 @@
         android:orientation="horizontal"
         android:background="@color/primary"
         >
+
+
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -177,15 +179,33 @@
             style="@style/ButtonPerso"
             android:text="Wall"
             />
-        <Button
+
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:id="@+id/gallery_btn"
-            style="@style/ButtonPerso"
-            android:onClick="launchGallery"
-            android:text="Gallery"
-            />
+            android:orientation="vertical"
+            >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/accent_green"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/gallery_btn"
+                style="@style/ButtonPerso"
+                android:onClick="launchGallery"
+                android:text="Gallery"
+                />
+
+        </LinearLayout>
+
+
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"

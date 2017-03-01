@@ -24,15 +24,31 @@
         android:orientation="horizontal"
         android:background="@color/primary"
         >
-        <Button
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:id="@+id/wall_btn"
-            android:onClick="launchWall"
-            style="@style/ButtonPerso"
-            android:text="Wall"
-            />
+            android:orientation="vertical"
+            >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/accent_green"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/wall_btn"
+                android:onClick="launchWall"
+                style="@style/ButtonPerso"
+                android:text="Wall"
+                />
+
+        </LinearLayout>
+
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"

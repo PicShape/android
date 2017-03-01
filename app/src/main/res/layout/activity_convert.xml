@@ -119,15 +119,31 @@
             android:onClick="launchGallery"
             android:text="Gallery"
             />
-        <Button
+
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:id="@+id/convert_btn"
-            style="@style/ButtonPerso"
-            android:onClick="launchConvert"
-            android:text="Convert"
-            />
+            android:orientation="vertical"
+            >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/accent_green"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/convert_btn"
+                style="@style/ButtonPerso"
+                android:onClick="launchConvert"
+                android:text="Convert"
+                />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
