@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
+import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PicSingleton;
 
 import org.json.JSONException;
@@ -70,30 +71,6 @@ public class ParamActivity extends AppCompatActivity {
 
         if ( PicSingleton.getInstance().getPicToShape() != null ) setMinImageView();
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.welcome_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            settings();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -401,6 +378,7 @@ public class ParamActivity extends AppCompatActivity {
             int serverResponseCode = 0;
             String path = null;
 
+            String token = AccountSingleton.getInstance().getAccountLoaded().getToken();
 
             try {
 
@@ -419,6 +397,7 @@ public class ParamActivity extends AppCompatActivity {
                 urlConnection.setConnectTimeout(50000);
                 urlConnection.setRequestMethod("POST"); // Request type
                 urlConnection.setRequestProperty("Connection", "Keep-Alive");
+                urlConnection.setRequestProperty("Authorization", "token: "+token);
                 urlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
 
 

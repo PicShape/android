@@ -106,7 +106,7 @@ public class ConvertActivity extends AppCompatActivity {
      */
     public void logoff(){
 
-        AccountAccess.logOff();
+        AccountAccess.logOff(this);
 
         Intent intent = new Intent(this, ConnectActivity.class);
         if(intent.resolveActivity(this.getPackageManager()) != null) {
@@ -215,7 +215,7 @@ public class ConvertActivity extends AppCompatActivity {
         }
         else {
             // Reduction of main layout size
-            ExpandAnimation animWelcome = new ExpandAnimation(welcomeLayout, 0.4f, 1.0f);
+            ExpandAnimation animWelcome = new ExpandAnimation(welcomeLayout, 0.4f, 0.9f);
             animWelcome.setDuration(300);
             welcomeLayout.startAnimation(animWelcome);
 

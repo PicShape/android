@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.picshape.R;
 import com.example.android.picshape.model.PictureShape;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -20,9 +22,9 @@ import java.util.LinkedList;
 
 public class PictureAdapter extends BaseAdapter {
     protected Context context;
-    protected LinkedList<PictureShape> gallery;
+    protected ArrayList<PictureShape> gallery;
 
-    public PictureAdapter(Context context, LinkedList<PictureShape> gallery){
+    public PictureAdapter(Context context, ArrayList<PictureShape> gallery){
         this.context = context;
         this.gallery = gallery;
     }
@@ -67,7 +69,10 @@ public class PictureAdapter extends BaseAdapter {
         PictureShape picShape = (PictureShape) getItem(position);
 
         // Set value
-        pic.setImageBitmap(picShape.getPicBitmap());
+        //pic.setImageBitmap(picShape.getPicBitmap());
+
+        PictureShape picture = gallery.get(position);
+        Glide.with(pic.getContext()).load(picture.getUrlConverted()).into(pic);
 
         return convertView;
     }

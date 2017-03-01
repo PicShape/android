@@ -1,14 +1,17 @@
 package com.example.android.picshape.dao;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.example.android.picshape.BuildConfig;
 import com.example.android.picshape.R;
 import com.example.android.picshape.Utility;
 import com.example.android.picshape.model.PicshapeAccount;
+import com.example.android.picshape.view.ConnectActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,16 +36,6 @@ import java.net.URL;
 
 public class AccountAccess {
 
-    public static PicshapeAccount getAccountByName(String name, String credential){
-        // TODO
-        return null;
-    }
-
-    public static PicshapeAccount getAccountByEmail(String email, String credential){
-
-        // TODO
-        return null;
-    }
 
     /**
      * This function connect user to the service
@@ -281,9 +274,24 @@ public class AccountAccess {
     }
 
 
-    public static boolean logOff(){
+    public static boolean deleteProfil(Context context, String fileName){
+        boolean deleted = false;
+        File file = context.getFileStreamPath(fileName);
+
+        if(file != null) deleted = file.delete();
+
+        return deleted;
+    }
+
+
+    public static boolean logOff(Context context){
 
         //TODO
+
+        AccountSingleton.getInstance().setAccountLoaded(null);
+
+        if( deleteProfil(context, BuildConfig.SAVE_FILE_NAME) ) return true;
+
 
         return false;
     }
