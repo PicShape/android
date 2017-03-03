@@ -1,6 +1,7 @@
 package com.example.android.picshape.view;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -120,5 +121,16 @@ public class ResultActivity extends AppCompatActivity {
         if(path != null) return true;
 
         return false;
+    }
+
+
+    /**
+     * This function launch ConvertActivity
+     * @param view
+     */
+    public void backToConvertActivity(View view){
+        Intent convertIntent = new Intent(this, ConvertActivity.class);
+
+        startActivity(convertIntent);
     }
 }
