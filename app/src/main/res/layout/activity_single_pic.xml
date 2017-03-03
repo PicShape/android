@@ -11,6 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.1"
         android:weightSum="3"
+        android:padding="5dp"
         android:orientation="horizontal"
         android:background="@color/primary"
         >
@@ -73,7 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
-        android:background="@color/primary">
+        android:background="@color/primary"
+        android:padding="10dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="20dp"

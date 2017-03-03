@@ -142,29 +142,13 @@ public class GalleryActivity extends AppCompatActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Intent singlePicIntent = new Intent(GalleryActivity.this, SinglePicActivity.class);
-                singlePicIntent.putExtra("urlPic", ((PictureShape)((parent).getItemAtPosition(position))).getUrlConverted());
+                singlePicIntent.putExtra("pic", ((PictureShape) ((parent).getItemAtPosition(position))));
 
                 startActivity(singlePicIntent);
             }
         });
-    }
-
-    // TODELETE TEST PURPOSE -------------------------------------
-    public LinkedList<PictureShape> demoGallery(){
-        LinkedList<PictureShape> temp = new LinkedList<>();
-
-        PictureShape pic1 = new PictureShape("Pic1", BitmapFactory.decodeResource(getResources(), R.drawable.genie));
-        PictureShape pic2 = new PictureShape("Pic2", BitmapFactory.decodeResource(getResources(), R.drawable.genie_output_2));
-        PictureShape pic3 = new PictureShape("Pic3", BitmapFactory.decodeResource(getResources(), R.drawable.picshaped));
-        PictureShape pic4 = new PictureShape("Pic4", BitmapFactory.decodeResource(getResources(), R.drawable.back_welcome_picshape));
-
-        temp.add(pic1);
-        temp.add(pic2);
-        temp.add(pic3);
-        temp.add(pic4);
-
-        return temp;
     }
 
     /**
