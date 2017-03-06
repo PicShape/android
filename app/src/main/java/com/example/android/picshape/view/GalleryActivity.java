@@ -1,6 +1,10 @@
 package com.example.android.picshape.view;
 
+import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -12,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,16 +27,21 @@ import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PictureAccess;
 import com.example.android.picshape.model.PicshapeAccount;
 import com.example.android.picshape.model.PictureShape;
+import com.example.android.picshape.service.UploadPicShapeService;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import static android.view.View.GONE;
 
 public class GalleryActivity extends AppCompatActivity {
 
     // Views
     private TextView mAccountName, mCounterPicTv, mCounterLikeTv;
     private ListView mPicturesListView;
+    private LinearLayout mLoadinglayout;
     private GridView mGridView;
+    private GalleryAdapter mAdpaterGallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +86,44 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver, new IntentFilter(
+                UploadPicShapeService.RECEIVER));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+
+                int resultCode = bundle.getInt(UploadPicShapeService.RESULT);
+                if (resultCode == RESULT_OK) {
+                    String urlNewPic = bundle.getString(UploadPicShapeService.URLPIC);
+                    Toast.makeText(GalleryActivity.this,
+                            "Upload complete. Download URI: " + urlNewPic,
+                            Toast.LENGTH_LONG).show();
+                    if(mLoadinglayout != null) mLoadinglayout.setVisibility(GONE);
+                    mAdpaterGallery.notifyDataSetChanged();
+
+                } else {
+                    Toast.makeText(GalleryActivity.this, "Upload failed",
+                            Toast.LENGTH_LONG).show();
+
+                }
+            }
+        }
+    };
+
     /**
      * This function initialize components of the fragment
      */
@@ -92,6 +140,21 @@ public class GalleryActivity extends AppCompatActivity {
         mGridView = (GridView) findViewById(R.id.gallery_gridView);
 
 
+        if ( isMyServiceRunning() ) {
+            mLoadinglayout = (LinearLayout) findViewById(R.id.loading_layout);
+            mLoadinglayout.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private boolean isMyServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("com.example.android.picshape.service.UploadPicShapeService".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -135,9 +198,9 @@ public class GalleryActivity extends AppCompatActivity {
      */
     public void fillGridPicture(final ArrayList<PictureShape> listShape){
 
-        GalleryAdapter adpater = new GalleryAdapter(this, R.layout.thumb, listShape);
+        mAdpaterGallery = new GalleryAdapter(this, R.layout.thumb, listShape);
 
-        mGridView.setAdapter(adpater);
+        mGridView.setAdapter(mAdpaterGallery);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

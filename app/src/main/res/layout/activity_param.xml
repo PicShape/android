@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:inputType="text|number"
-            android:text="100"
+            android:text="30"
             android:ems="10"
             android:id="@+id/iteration_editText" />
 
