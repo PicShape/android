@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Copyright (C) 2016 Emerik Bedouin - All Rights Reserved
@@ -213,75 +214,6 @@ public class AccountAccess {
     }
 
 
-    /**
-     * Save account on internal memory in JSON
-     * @param context
-     * @param account
-     * @return
-     */
-    public static boolean saveProfilJSON(Context context, PicshapeAccount account, String fileName){
-
-        String data = Utility.getJSONFromAccount(account);
-
-        File file = new File(context.getFilesDir(), fileName);
-
-        FileOutputStream outputStream;
-
-        try {
-            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-            outputStream.write(data.getBytes());
-            outputStream.close();
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Load account from internal memory
-     * @param context
-     * @param fileName
-     * @return
-     */
-    public static PicshapeAccount loadProfilJSON(Context context, String fileName){
-
-        String json = null;
-
-        File file = new File(context.getFilesDir(), fileName);
-
-        FileInputStream inputStream;
-
-        try{
-            inputStream = context.openFileInput(fileName);
-            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
-
-            json = r.readLine();
-
-            r.close();
-            inputStream.close();
-
-            return Utility.getAccountFromJSON(json);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        return null;
-    }
-
-
-    public static boolean deleteProfil(Context context, String fileName){
-        boolean deleted = false;
-        File file = context.getFileStreamPath(fileName);
-
-        if(file != null) deleted = file.delete();
-
-        return deleted;
-    }
 
 
     public static boolean logOff(Context context){
@@ -296,6 +228,12 @@ public class AccountAccess {
         return false;
     }
 
+    /**
+     * This function send a request to get an email to recover password
+     * @param urlWebService
+     * @param email
+     * @return
+     */
     public static boolean forgetPassword(String urlWebService, String email){
 
 
@@ -381,6 +319,13 @@ public class AccountAccess {
         return false;
     }
 
+    /**
+     * This function send a POST to modify an account
+     * @param urlWebService
+     * @param password
+     * @param token
+     * @return
+     */
     public static boolean changeAccountInfo(String urlWebService, String password, String token){
 
 
@@ -470,6 +415,12 @@ public class AccountAccess {
 
     }
 
+    /**
+     * This function send a POST to delete an account
+     * @param urlWebService
+     * @param token
+     * @return
+     */
     public static boolean deleteAccount(String urlWebService, String token){
 
 
@@ -549,6 +500,75 @@ public class AccountAccess {
         return false;
     }
 
+    /**
+     * This function send a GET to get all users of PicShape
+     * @param urlRoute
+     * @return
+     */
+    public static ArrayList<String> getAllUsers(String urlRoute){
+
+
+        HttpURLConnection urlConnection = null;
+        int serverResponseCode = 0;
+
+
+        try {
+
+            String urlString = urlRoute;
+
+            URL url = new URL(urlString);
+
+            // Create the request to Webservice and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
+            Log.i("AccountACCESS","url : "+urlConnection.getURL());
+            urlConnection.setConnectTimeout(8000);
+            urlConnection.setRequestMethod("GET"); // Request type
+
+
+            // Responses from the server (code and message)
+            serverResponseCode = urlConnection.getResponseCode();
+            String serverResponseMessage = urlConnection.getResponseMessage();
+
+            Log.i("AccountACCESS","Response code : "+serverResponseCode+" || "+serverResponseMessage);
+
+            if(serverResponseCode == 200){
+
+                // We get the returned from the request
+                String returnedJSON;
+
+                InputStream is = urlConnection.getInputStream();
+
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line2 = null;
+                while ((line2 = bReader.readLine()) != null) {
+                    sBuilder.append(line2 + "\n");
+                }
+
+                is.close();
+                returnedJSON = sBuilder.toString();
+
+                // TODO clean
+                Log.v("AccountACCESS","json : "+returnedJSON);
+
+                urlConnection.disconnect();
+
+                return Utility.getNameAccountsFromJSON(returnedJSON);
+            }
+
+
+
+        } catch (IOException e) {
+            Log.e("PICTURE ACCESSS", "Error "+e.getMessage(), e);
+
+            return null;
+        }
+
+        return null;
+    }
+
+
 
     public static Bitmap getPictureById(int pictureId, PicshapeAccount account){
 
@@ -557,6 +577,79 @@ public class AccountAccess {
 
         return null;
     }
+
+
+    /**
+     * Save account on internal memory in JSON
+     * @param context
+     * @param account
+     * @return
+     */
+    public static boolean saveProfilJSON(Context context, PicshapeAccount account, String fileName){
+
+        String data = Utility.getJSONFromAccount(account);
+
+        File file = new File(context.getFilesDir(), fileName);
+
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.write(data.getBytes());
+            outputStream.close();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Load account from internal memory
+     * @param context
+     * @param fileName
+     * @return
+     */
+    public static PicshapeAccount loadProfilJSON(Context context, String fileName){
+
+        String json = null;
+
+        File file = new File(context.getFilesDir(), fileName);
+
+        FileInputStream inputStream;
+
+        try{
+            inputStream = context.openFileInput(fileName);
+            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+
+            json = r.readLine();
+
+            r.close();
+            inputStream.close();
+
+            return Utility.getAccountFromJSON(json);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+
+    public static boolean deleteProfil(Context context, String fileName){
+        boolean deleted = false;
+        File file = context.getFileStreamPath(fileName);
+
+        if(file != null) deleted = file.delete();
+
+        return deleted;
+    }
+
+
 
     // Utility function
 

@@ -111,6 +111,35 @@ public class Utility {
     }
 
     /**
+     * This function get accounts name from JSON String
+     * @param jsonString
+     */
+    public static ArrayList<String> getNameAccountsFromJSON(String jsonString){
+        //parse JSON data
+        try {
+            ArrayList<String> nameList = new ArrayList<>();
+            Log.v("ACCOUNT ACCESS", "T : "+jsonString);
+            JSONObject myJSON = new JSONObject(jsonString);
+            JSONArray jsonAll = myJSON.getJSONArray("users");
+
+            for (int i = 0 ; i < jsonAll.length() ; i++) {
+
+                JSONObject jObject = (JSONObject) jsonAll.get(i);
+
+                nameList.add( jObject.getString("name") );
+
+            }
+
+            return nameList;
+
+        } catch (JSONException e) {
+            Log.e("JSONException", "Error: " + e.toString());
+            return null;
+        }
+    }
+
+
+    /**
      * This function get the JSON string from PicShapeAccount
      * @param account
      */
@@ -160,7 +189,7 @@ public class Utility {
                     String photo = listUrl.getJSONObject(i).getString("photo");
                     String converted = listUrl.getJSONObject(i).getString("converted");
 
-                    tempShape = new PictureShape("Romain", converted, thumbnail, photo);
+                    tempShape = new PictureShape("1", "Romain", converted, thumbnail, photo);
                     listOfShape.add(tempShape);
                 }
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +30,6 @@ import com.example.android.picshape.model.PictureShape;
 import com.example.android.picshape.service.UploadPicShapeService;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import static android.view.View.GONE;
 
@@ -42,6 +41,7 @@ public class GalleryActivity extends AppCompatActivity {
     private LinearLayout mLoadinglayout;
     private GridView mGridView;
     private GalleryAdapter mAdpaterGallery;
+    private ProgressBar mGalleryProBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +113,7 @@ public class GalleryActivity extends AppCompatActivity {
                             "Upload complete. Download URI: " + urlNewPic,
                             Toast.LENGTH_LONG).show();
                     if(mLoadinglayout != null) mLoadinglayout.setVisibility(GONE);
-                    mAdpaterGallery.notifyDataSetChanged();
-
+                    getAccountPicture();
                 } else {
                     Toast.makeText(GalleryActivity.this, "Upload failed",
                             Toast.LENGTH_LONG).show();
@@ -145,8 +144,14 @@ public class GalleryActivity extends AppCompatActivity {
             mLoadinglayout.setVisibility(View.VISIBLE);
         }
 
+        mGalleryProBar = (ProgressBar) findViewById(R.id.gallery_progressBar);
+
     }
 
+    /**
+     * This function check if Upload Service is running
+     * @return
+     */
     private boolean isMyServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -191,6 +196,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         task.execute(url, name, "1");
     }
+
 
     /**
      * This function fill the GridView with picture in parameters
@@ -267,6 +273,13 @@ public class GalleryActivity extends AppCompatActivity {
         Toast.makeText(this, "You're already on the gallery screen", Toast.LENGTH_LONG).show();
     }
 
+    public void startLoading(){
+        mGalleryProBar.setVisibility(View.VISIBLE);
+    }
+
+    public void stopLoading(){
+        mGalleryProBar.setVisibility(View.GONE);
+    }
 
     /**
      * This class manages the http call to webService
@@ -284,7 +297,7 @@ public class GalleryActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            startLoading();
         }
 
         /**
@@ -303,7 +316,7 @@ public class GalleryActivity extends AppCompatActivity {
             mode = params[2];
 
             if("1".equals(mode)){
-                listShape = PictureAccess.getPicturesList(url, name);
+                listShape = PictureAccess.getProfilPicturesList(url, name);
             }
 
 
@@ -317,7 +330,7 @@ public class GalleryActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(Integer result) {
-
+            stopLoading();
             if("1".equals(mode)){
 
                 if(listShape != null){
