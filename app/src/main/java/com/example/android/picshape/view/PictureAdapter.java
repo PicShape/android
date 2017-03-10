@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.picshape.R;
@@ -47,6 +48,8 @@ public class PictureAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        myConvertView viewHolder = null;
+
         ImageView pic;
 
         // At the first call ConvertView is null, we inflate our layout
@@ -55,14 +58,16 @@ public class PictureAdapter extends BaseAdapter {
 
             convertView = mInflater.inflate(R.layout.layout_gallery, parent, false);
 
-            pic = (ImageView) convertView.findViewById(R.id.image);
+            viewHolder = new myConvertView();
+            viewHolder.titleTv = (TextView) convertView.findViewById(R.id.title_pic_textView);
+            viewHolder.picIv = (ImageView) convertView.findViewById(R.id.pic_imageView);
 
 
             // We set our ImageView as tag of convertVie
-            convertView.setTag(pic);
+            convertView.setTag(viewHolder);
         } else {
             // convertView isn't null so no need to retrieve our views
-            pic = (ImageView) convertView.getTag();
+            viewHolder = (myConvertView) convertView.getTag();
         }
 
         // We get the pic at the position
@@ -72,8 +77,15 @@ public class PictureAdapter extends BaseAdapter {
         //pic.setImageBitmap(picShape.getPicBitmap());
 
         PictureShape picture = gallery.get(position);
-        Glide.with(pic.getContext()).load(picture.getUrlConverted()).into(pic);
+
+        Glide.with(viewHolder.picIv.getContext()).load(picture.getUrlConverted()).into(viewHolder.picIv);
+        viewHolder.titleTv.setText(picture.getDescription());
 
         return convertView;
+    }
+
+    private class myConvertView{
+        TextView titleTv;
+        ImageView picIv;
     }
 }
