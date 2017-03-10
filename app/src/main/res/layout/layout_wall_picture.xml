@@ -22,7 +22,7 @@
         android:gravity="center_vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="120dp"
         android:orientation="vertical"
         android:padding="10dp"
@@ -48,17 +48,19 @@
                 android:src="@drawable/heart"
                 android:layout_margin="5dp"/>
             <TextView
-                android:id="@+id/title_pic_textView"
+                android:id="@+id/name_user_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:text="My sweet summer love"/>
 
         </LinearLayout>
 
         <!-- To replace with a listView ?-->
         <TextView
-            android:id="@+id/last_comment_pic_textView"
+            android:id="@+id/title_pic_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"

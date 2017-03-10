@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
@@ -139,7 +140,7 @@ public class WallActivity extends AppCompatActivity {
      */
     public void fillListPicture(final ArrayList<PictureShape> listShape){
 
-        PictureAdapter adpater = new PictureAdapter(this, listShape);
+        PictureAdapter adpater = new PictureAdapter(this, listShape, new UserOnClickListener());
 
         mPicturesListView.setAdapter(adpater);
 
@@ -296,5 +297,19 @@ public class WallActivity extends AppCompatActivity {
     }
 
 
+    private class UserOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            String name = ((TextView)v).getText().toString();
+            Intent galleryIntent = new Intent(WallActivity.this, GalleryActivity.class);
+            galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null));
+
+            if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(galleryIntent);
+            }
+        }
+    }
 
 }

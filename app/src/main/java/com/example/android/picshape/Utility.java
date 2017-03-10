@@ -102,7 +102,7 @@ public class Utility {
             String name = jObject.getString("name");
             String email = jObject.getString("email");
 
-            return new PicshapeAccount(1, name, email, token);
+            return new PicshapeAccount("1", name, email, token);
 
         } catch (JSONException e) {
             Log.e("JSONException", "Error: " + e.toString());
@@ -189,7 +189,7 @@ public class Utility {
                     String photo = listUrl.getJSONObject(i).getString("photo");
                     String converted = listUrl.getJSONObject(i).getString("converted");
 
-                    tempShape = new PictureShape("1", "Romain", converted, thumbnail, photo);
+                    tempShape = new PictureShape("1", "nomPhoto", "Romain", converted, thumbnail, photo);
                     listOfShape.add(tempShape);
                 }
 

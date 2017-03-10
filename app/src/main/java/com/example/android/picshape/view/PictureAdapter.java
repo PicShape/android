@@ -14,7 +14,6 @@ import com.example.android.picshape.R;
 import com.example.android.picshape.model.PictureShape;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Copyright (C) 2016 Emerik Bedouin - All Rights Reserved
@@ -24,10 +23,17 @@ import java.util.LinkedList;
 public class PictureAdapter extends BaseAdapter {
     protected Context context;
     protected ArrayList<PictureShape> gallery;
+    public View.OnClickListener mOnClickListener;
 
     public PictureAdapter(Context context, ArrayList<PictureShape> gallery){
         this.context = context;
         this.gallery = gallery;
+    }
+
+    public PictureAdapter(Context context, ArrayList<PictureShape> gallery, View.OnClickListener onClickListener){
+        this.context = context;
+        this.gallery = gallery;
+        this.mOnClickListener = onClickListener;
     }
 
     @Override
@@ -56,9 +62,10 @@ public class PictureAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-            convertView = mInflater.inflate(R.layout.layout_gallery, parent, false);
+            convertView = mInflater.inflate(R.layout.layout_wall_picture, parent, false);
 
             viewHolder = new myConvertView();
+            viewHolder.userTv = (TextView) convertView.findViewById(R.id.name_user_textView);
             viewHolder.titleTv = (TextView) convertView.findViewById(R.id.title_pic_textView);
             viewHolder.picIv = (ImageView) convertView.findViewById(R.id.pic_imageView);
 
@@ -79,12 +86,16 @@ public class PictureAdapter extends BaseAdapter {
         PictureShape picture = gallery.get(position);
 
         Glide.with(viewHolder.picIv.getContext()).load(picture.getUrlConverted()).into(viewHolder.picIv);
+        viewHolder.userTv.setText(picture.getIdUser());
         viewHolder.titleTv.setText(picture.getDescription());
+
+        viewHolder.userTv.setOnClickListener(mOnClickListener);
 
         return convertView;
     }
 
     private class myConvertView{
+        TextView userTv;
         TextView titleTv;
         ImageView picIv;
     }

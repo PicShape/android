@@ -76,7 +76,14 @@ public class PictureAccess {
 
                 urlConnection.disconnect();
 
-                return Utility.getPicturesFromJSON(returnedJSON);
+
+                ArrayList<PictureShape> picLists = Utility.getPicturesFromJSON(returnedJSON);
+
+                for (int i = 0; i < picLists.size(); i++) {
+                    picLists.get(i).setIdUser(name);
+                }
+
+                return picLists;
             }
 
 
