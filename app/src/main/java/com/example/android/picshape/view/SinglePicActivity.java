@@ -4,17 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.picshape.R;
+import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.model.PictureShape;
 
 public class SinglePicActivity extends AppCompatActivity {
 
     //View
     private ImageView mPicture;
+    private Button mDeleteButton;
     private TextView mUsername, mPicTitle;
     private PictureShape mPicShape;
 
@@ -69,6 +72,31 @@ public class SinglePicActivity extends AppCompatActivity {
 
         mPicTitle = (TextView) findViewById(R.id.pic_name_textView);
 
+
+        // If user is the picture owner
+
+        if(mPicShape.getIdUser().equals(AccountSingleton.getInstance().getAccountLoaded().getId())) {
+            mDeleteButton = (Button) findViewById(R.id.delete_button);
+
+            mDeleteButton.setVisibility(View.VISIBLE);
+
+            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deletePicture();
+                }
+            });
+        }
+
+    }
+
+    /**
+     * This function makes call to delete picture
+     */
+    public void deletePicture(){
+        //TODO call to request deletion
+
+        // TODO launch of the previous activity
     }
 
 
