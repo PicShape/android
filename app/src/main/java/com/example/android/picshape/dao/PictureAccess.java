@@ -99,6 +99,83 @@ public class PictureAccess {
         return null;
     }
 
+
+
+    /**
+     * This function get picture of the profil from the server
+     * @param urlWebService
+     * @param token
+     * @return
+     */
+    public static boolean deletePicture(String urlWebService, String token){
+
+        HttpURLConnection urlConnection = null;
+        int serverResponseCode = 0;
+
+
+        try {
+
+            String urlString = urlWebService;
+
+            URL url = new URL(urlString);
+
+            // Create the request to Webservice and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
+            Log.i("PictureACCESS","url : "+urlConnection.getURL());
+            urlConnection.setConnectTimeout(8000);
+            urlConnection.setRequestMethod("DELETE"); // Request type
+            urlConnection.setRequestProperty("Authorization", "token: "+token);
+
+
+            // Responses from the server (code and message)
+            serverResponseCode = urlConnection.getResponseCode();
+            String serverResponseMessage = urlConnection.getResponseMessage();
+
+            Log.i("PictureACCESS","Response code : "+serverResponseCode+" || "+serverResponseMessage);
+
+            if(serverResponseCode == 200){
+                Log.v("PictureAccess", "Request success !");
+
+                // We get the returned from the request
+                String returnedJSON;
+
+                InputStream is = urlConnection.getInputStream();
+
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line2 = null;
+                while ((line2 = bReader.readLine()) != null) {
+                    sBuilder.append(line2 + "\n");
+                }
+
+                is.close();
+                returnedJSON = sBuilder.toString();
+
+                // TODO clean
+                Log.v("PICTURE ACCESS","json : "+returnedJSON);
+
+                urlConnection.disconnect();
+
+
+                return true;
+            }
+
+
+
+        } catch (IOException e) {
+            Log.e("PICTURE ACCESSS", "Error "+e.getMessage(), e);
+
+            return false;
+        }
+
+
+
+        return false;
+    }
+
+
+
     /**
      * This function get all picture from the server
      * @param urlWebService

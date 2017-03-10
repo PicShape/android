@@ -231,6 +231,7 @@ public class GalleryActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent singlePicIntent = new Intent(GalleryActivity.this, SinglePicActivity.class);
+                singlePicIntent.putExtra("username",mProfil.getName());
                 singlePicIntent.putExtra("pic", ((PictureShape) ((parent).getItemAtPosition(position))));
 
                 startActivity(singlePicIntent);

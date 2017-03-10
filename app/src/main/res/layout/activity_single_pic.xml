@@ -36,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:text="John Malkovic"/>
@@ -57,7 +58,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:background="@drawable/delete_button"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -73,6 +74,13 @@
         android:layout_height="0dp"
         android:layout_weight="0.7"
         android:src="@drawable/back_welcome_picshape"/>
+
+    <ProgressBar
+        android:id="@+id/single_pic_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:visibility="gone"/>
 
 
     <View

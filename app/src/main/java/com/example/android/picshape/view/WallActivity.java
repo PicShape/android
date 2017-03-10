@@ -147,7 +147,12 @@ public class WallActivity extends AppCompatActivity {
         mPicturesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                TextView tvName = (TextView) view.findViewById(R.id.name_user_textView);
+                String name = tvName.getText().toString();
+
                 Intent singlePicIntent = new Intent(WallActivity.this, SinglePicActivity.class);
+                singlePicIntent.putExtra("username",name);
                 singlePicIntent.putExtra("pic", ((PictureShape) ((parent).getItemAtPosition(position))));
 
                 startActivity(singlePicIntent);
