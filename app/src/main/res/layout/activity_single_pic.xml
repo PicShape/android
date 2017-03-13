@@ -36,18 +36,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
+                android:textSize="12sp"
                 android:text="John Malkovic"/>
         </LinearLayout>
 
         <TextView
             android:id="@+id/pic_name_textView"
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_weight="1.9"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:textColor="@android:color/white"
+            android:textSize="14sp"
             android:text="Landscape"/>
+
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:background="@drawable/delete_button"
+            android:visibility="gone"/>
+
     </LinearLayout>
 
     <View
@@ -63,6 +75,13 @@
         android:layout_weight="0.7"
         android:src="@drawable/back_welcome_picshape"/>
 
+    <ProgressBar
+        android:id="@+id/single_pic_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:visibility="gone"/>
+
 
     <View
         android:layout_width="match_parent"
@@ -70,17 +89,24 @@
         android:background="@color/primary"
         />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
+        android:orientation="vertical"
         android:background="@color/primary"
-        android:padding="10dp">
+        >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
             android:text="Comments"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/white"/>
 
         <ListView
             android:layout_width="match_parent"
@@ -89,7 +115,7 @@
             />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

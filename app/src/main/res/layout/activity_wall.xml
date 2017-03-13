@@ -22,6 +22,26 @@
         android:layout_weight="0.9"
         />
 
+    <LinearLayout
+        android:id="@+id/users_search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ListView
+            android:id="@+id/users_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:id="@+id/back_pic_btn"
+            android:background="@drawable/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/tabs"

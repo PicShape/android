@@ -1,6 +1,7 @@
 package com.example.android.picshape.view;
 
 import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,11 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
+import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PictureAccess;
@@ -26,12 +32,18 @@ import com.example.android.picshape.model.PicshapeAccount;
 import com.example.android.picshape.model.PictureShape;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class WallActivity extends AppCompatActivity {
+import static android.view.View.GONE;
+
+public class WallActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     // View
-    private ListView mPicturesListView;
+    private ListView mPicturesListView, mUsersListView;
     private ProgressBar mWallProBar;
+    private LinearLayout mUsersSearchLayout;
+    private Button mBackBtn;
+    private SearchView mSearchView;
 
 
     @Override
@@ -49,17 +61,21 @@ public class WallActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.wall_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        mSearchView = (SearchView) searchItem.getActionView();
 
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         if(null!=searchManager ) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
-        searchView.setIconifiedByDefault(false);
+        mSearchView.setIconifiedByDefault(false);
+
+        mSearchView.setOnQueryTextListener(this);
 
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,6 +102,37 @@ public class WallActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        showHideListViews(true);
+
+
+
+        WallTask task = new WallTask();
+        //String url = "https://picshape-engine-develop.herokuapp.com/api/account/login";
+        //String url = "http://192.168.0.13:8080/api/account/login";
+
+        // Retrieve URL from preferences
+        String route = "/api/";
+        SharedPreferences preferences =  PreferenceManager.getDefaultSharedPreferences(this);
+        String url = preferences.getString(getString(R.string.pref_url_key),getString(R.string.pref_url_default))+route;
+        String routeUsers = "users/";
+        String routePictures = "gallery/photos/";
+
+        task.execute(url,routeUsers, routePictures, query, "2");
+
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+
+
     /**
      * This function initialize components of the fragment
      */
@@ -95,6 +142,31 @@ public class WallActivity extends AppCompatActivity {
         mPicturesListView = (ListView) findViewById(R.id.pictures_listView);
 
         mWallProBar = (ProgressBar) findViewById(R.id.wall_progressBar);
+
+        mUsersSearchLayout = (LinearLayout) findViewById(R.id.users_search_layout);
+
+        mUsersListView = (ListView) findViewById(R.id.users_listView);
+
+        mBackBtn = (Button) findViewById(R.id.back_pic_btn);
+
+        mBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHideListViews(false);
+            }
+        });
+    }
+
+
+    public void showHideListViews(boolean toggle){
+        if(toggle){
+            mPicturesListView.setVisibility(GONE);
+            mUsersSearchLayout.setVisibility(View.VISIBLE);
+        }
+        else {
+            mUsersSearchLayout.setVisibility(GONE);
+            mPicturesListView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -139,17 +211,50 @@ public class WallActivity extends AppCompatActivity {
      */
     public void fillListPicture(final ArrayList<PictureShape> listShape){
 
-        PictureAdapter adpater = new PictureAdapter(this, listShape);
+        PictureAdapter adpater = new PictureAdapter(this, listShape, new UserOnClickListener());
 
         mPicturesListView.setAdapter(adpater);
 
         mPicturesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                TextView tvName = (TextView) view.findViewById(R.id.name_user_textView);
+                String name = tvName.getText().toString();
+
                 Intent singlePicIntent = new Intent(WallActivity.this, SinglePicActivity.class);
+                singlePicIntent.putExtra("username",name);
                 singlePicIntent.putExtra("pic", ((PictureShape) ((parent).getItemAtPosition(position))));
 
                 startActivity(singlePicIntent);
+            }
+        });
+    }
+
+    /**
+     * This function fill the GridView with picture in parameters
+     * @param nameList
+     */
+    public void fillUsersList(final ArrayList<String> nameList){
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                nameList);
+
+        mUsersListView.setAdapter(adapter);
+
+        mUsersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name = ((TextView)view).getText().toString();
+                Intent galleryIntent = new Intent(WallActivity.this, GalleryActivity.class);
+                galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null));
+
+                if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(galleryIntent);
+                }
             }
         });
     }
@@ -214,8 +319,9 @@ public class WallActivity extends AppCompatActivity {
     }
 
     public void stopLoading(){
-        mWallProBar.setVisibility(View.GONE);
+        mWallProBar.setVisibility(GONE);
     }
+
 
     /**
      * This class manages the http call to webService
@@ -226,6 +332,7 @@ public class WallActivity extends AppCompatActivity {
         private PicshapeAccount userAccount;
         private String mode ;
         private ArrayList<PictureShape> listShape;
+        ArrayList<String> mNameList;
 
         /**
          * This function is executed before execution of the task, used to show progress bar
@@ -254,17 +361,20 @@ public class WallActivity extends AppCompatActivity {
             mode = params[4];
 
             if("1".equals(mode)){
-                ArrayList<String> nameList = AccountAccess.getAllUsers( (url+urlRouteUsers) );
+                mNameList = AccountAccess.getAllUsers( (url+urlRouteUsers) );
                 ArrayList<PictureShape> listTemp;
                 listShape = new ArrayList<>();
 
-                if(nameList != null) {
-                    for (int i = 0; i < nameList.size(); i++) {
-                        listTemp = PictureAccess.getProfilPicturesList( (url+urlRoutePictures), nameList.get(i));
+                if(mNameList != null) {
+                    for (int i = 0; i < mNameList.size(); i++) {
+                        listTemp = PictureAccess.getProfilPicturesList( (url+urlRoutePictures), mNameList.get(i));
                         Log.v(LOG_TAG,"List : "+listTemp);
                         if (listTemp != null) listShape.addAll(listTemp);
                     }
                 }
+            }
+            else if ("2".equals(mode)){
+                mNameList = AccountAccess.getUsers( (url+urlRouteUsers), name );
             }
 
 
@@ -290,11 +400,36 @@ public class WallActivity extends AppCompatActivity {
                     // NO pic ?
                 }
             }
+            else if ("2".equals(mode)){
+                if(mNameList != null){
+
+
+                    fillUsersList(mNameList);
+
+                }
+            }
 
         }
 
     }
 
 
+    /**
+     * This class implements a custom on click listener to launch user profil
+     */
+    private class UserOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            String name = ((TextView)v).getText().toString();
+            Intent galleryIntent = new Intent(WallActivity.this, GalleryActivity.class);
+            galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null));
+
+            if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(galleryIntent);
+            }
+        }
+    }
 
 }

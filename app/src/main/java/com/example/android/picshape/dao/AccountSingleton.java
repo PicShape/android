@@ -26,7 +26,7 @@ public class AccountSingleton {
         else return mInstance;
     }
 
-    public static PicshapeAccount getAccountLoaded() {
+    public PicshapeAccount getAccountLoaded() {
         return accountLoaded;
     }
 

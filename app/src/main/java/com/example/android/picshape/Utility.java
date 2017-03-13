@@ -102,7 +102,7 @@ public class Utility {
             String name = jObject.getString("name");
             String email = jObject.getString("email");
 
-            return new PicshapeAccount(1, name, email, token);
+            return new PicshapeAccount("1", name, email, token);
 
         } catch (JSONException e) {
             Log.e("JSONException", "Error: " + e.toString());
@@ -189,7 +189,7 @@ public class Utility {
                     String photo = listUrl.getJSONObject(i).getString("photo");
                     String converted = listUrl.getJSONObject(i).getString("converted");
 
-                    tempShape = new PictureShape("1", "Romain", converted, thumbnail, photo);
+                    tempShape = new PictureShape("1", "nomPhoto", "Romain", converted, thumbnail, photo);
                     listOfShape.add(tempShape);
                 }
 
@@ -201,5 +201,26 @@ public class Utility {
         }
 
         return null;
+    }
+
+
+    /**
+     * This function sort a list
+     * @param listToSort
+     * @return
+     */
+    public static ArrayList<String> sortList(ArrayList<String> listToSort, String exp){
+        ArrayList<String> listSorted = null;
+
+        if(listToSort != null && listToSort.size() > 0){
+            listSorted = new ArrayList<>();
+            for (int i = 0; i < listToSort.size(); i++) {
+                if(listToSort.get(i).contains(exp)){
+                    listSorted.add(listToSort.get(i));
+                }
+            }
+        }
+
+        return listSorted;
     }
 }

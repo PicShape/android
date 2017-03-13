@@ -12,6 +12,7 @@ import android.os.Parcelable;
 public class PictureShape implements Parcelable{
 
     private String idUser;
+    private String idPic;
     private String description;
     private String urlConverted;
     private String urlPhoto;
@@ -21,8 +22,9 @@ public class PictureShape implements Parcelable{
         this.description = description;
     }
 
-    public PictureShape(String idUser, String description, String urlConverted, String urlThumb, String urlPhoto) {
+    public PictureShape(String idUser, String idPic, String description, String urlConverted, String urlThumb, String urlPhoto) {
         this.idUser = idUser;
+        this.idPic = idPic;
         this.description = description;
         this.urlConverted = urlConverted;
         this.urlPhoto = urlPhoto;
@@ -35,6 +37,14 @@ public class PictureShape implements Parcelable{
 
     public void setIdUser(String idUser) {
         this.idUser = idUser;
+    }
+
+    public String getIdPic() {
+        return idPic;
+    }
+
+    public void setIdPic(String idPic) {
+        this.idPic = idPic;
     }
 
     public String getDescription() {
@@ -79,6 +89,7 @@ public class PictureShape implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(idUser);
+        dest.writeString(idPic);
         dest.writeString(description);
         dest.writeString(urlConverted);
         dest.writeString(urlPhoto);
@@ -102,6 +113,7 @@ public class PictureShape implements Parcelable{
 
     public PictureShape(Parcel in) {
         this.idUser = in.readString();
+        this.idPic = in.readString();
         this.description = in.readString();
         this.urlConverted = in.readString();
         this.urlPhoto = in.readString();

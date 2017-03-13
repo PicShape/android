@@ -35,6 +35,8 @@ import static android.view.View.GONE;
 
 public class GalleryActivity extends AppCompatActivity {
 
+    private PicshapeAccount mProfil;
+
     // Views
     private TextView mAccountName, mCounterPicTv, mCounterLikeTv;
     private ListView mPicturesListView;
@@ -50,13 +52,26 @@ public class GalleryActivity extends AppCompatActivity {
 
         initComp();
 
-        displaysAccountInfo();
+        Bundle galleryBundle = getIntent().getExtras();
+        PicshapeAccount profil = null;
+        if( galleryBundle != null) {
+            profil = (PicshapeAccount) galleryBundle.get("account");
+        }
+        if( profil != null){
+            mProfil = profil;
+        }
+        else{
+            mProfil = AccountSingleton.getInstance().getAccountLoaded();
+        }
+
+
+        if(mProfil != null) displaysAccountInfo();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.welcome_menu, menu);
+        getMenuInflater().inflate(R.menu.gallery_menu, menu);
         return true;
     }
 
@@ -90,13 +105,18 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(receiver, new IntentFilter(
-                UploadPicShapeService.RECEIVER));
+        if(AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
+            registerReceiver(receiver, new IntentFilter(
+                    UploadPicShapeService.RECEIVER));
+        }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+        if(AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
+            unregisterReceiver(receiver);
+        }
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -113,7 +133,7 @@ public class GalleryActivity extends AppCompatActivity {
                             "Upload complete. Download URI: " + urlNewPic,
                             Toast.LENGTH_LONG).show();
                     if(mLoadinglayout != null) mLoadinglayout.setVisibility(GONE);
-                    getAccountPicture();
+                    getAccountPicture(mProfil.getName());
                 } else {
                     Toast.makeText(GalleryActivity.this, "Upload failed",
                             Toast.LENGTH_LONG).show();
@@ -168,21 +188,19 @@ public class GalleryActivity extends AppCompatActivity {
     public void displaysAccountInfo(){
 
         // TODO fill name & picture
-        mAccountName.setText(AccountSingleton.getInstance().getAccountLoaded().getName());
+        mAccountName.setText(mProfil.getName());
 
         // TODO fill counters
 
         //TODO fill listView
-       getAccountPicture();
+       getAccountPicture(mProfil.getName());
     }
 
 
     /**
      * This function create a task to get profil pictures
      */
-    public void getAccountPicture(){
-
-        String name = AccountSingleton.getInstance().getAccountLoaded().getName();
+    public void getAccountPicture(String name){
 
 
         GalleryTask task = new GalleryTask();
@@ -213,6 +231,7 @@ public class GalleryActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent singlePicIntent = new Intent(GalleryActivity.this, SinglePicActivity.class);
+                singlePicIntent.putExtra("username",mProfil.getName());
                 singlePicIntent.putExtra("pic", ((PictureShape) ((parent).getItemAtPosition(position))));
 
                 startActivity(singlePicIntent);
