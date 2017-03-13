@@ -202,4 +202,25 @@ public class Utility {
 
         return null;
     }
+
+
+    /**
+     * This function sort a list
+     * @param listToSort
+     * @return
+     */
+    public static ArrayList<String> sortList(ArrayList<String> listToSort, String exp){
+        ArrayList<String> listSorted = null;
+
+        if(listToSort != null && listToSort.size() > 0){
+            listSorted = new ArrayList<>();
+            for (int i = 0; i < listToSort.size(); i++) {
+                if(listToSort.get(i).contains(exp)){
+                    listSorted.add(listToSort.get(i));
+                }
+            }
+        }
+
+        return listSorted;
+    }
 }

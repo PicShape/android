@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,7 +51,7 @@ public class ConvertActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.welcome_menu, menu);
+        getMenuInflater().inflate(R.menu.gallery_menu, menu);
         return true;
     }
 
@@ -200,7 +199,7 @@ public class ConvertActivity extends AppCompatActivity {
 
         RelativeLayout welcomeLayout = (RelativeLayout) findViewById(R.id.welcome_relativeLayout);
         RelativeLayout picLayout = (RelativeLayout) findViewById(R.id.pic_layout);
-        TextView instructionTv = (TextView) findViewById(R.id.instruction_textView);
+
 
         if( !mChoosen ) {
             // Reduction of main layout size
