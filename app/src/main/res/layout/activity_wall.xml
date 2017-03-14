@@ -15,13 +15,18 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-    <ListView
-        android:id="@+id/pictures_listView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.9"
-        />
+        android:layout_weight="0.9">
 
+        <ListView
+            android:id="@+id/pictures_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
     <LinearLayout
         android:id="@+id/users_search_layout"
         android:layout_width="match_parent"

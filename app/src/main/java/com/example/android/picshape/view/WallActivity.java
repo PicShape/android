@@ -1,12 +1,12 @@
 package com.example.android.picshape.view;
 
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.picshape.R;
-import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PictureAccess;
@@ -32,7 +31,6 @@ import com.example.android.picshape.model.PicshapeAccount;
 import com.example.android.picshape.model.PictureShape;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.view.View.GONE;
 
@@ -44,6 +42,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
     private LinearLayout mUsersSearchLayout;
     private Button mBackBtn;
     private SearchView mSearchView;
+    private SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -52,7 +51,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
         setContentView(R.layout.activity_wall);
 
         initComp();
-        displaysAccountInfo();
+        displaysPictures();
     }
 
     @Override
@@ -155,8 +154,36 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
                 showHideListViews(false);
             }
         });
+
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                refreshList();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
+    /**
+     * This function refresh Picture list
+     */
+    public void refreshList(){
+
+        displaysPictures();
+
+        swipeContainer.setRefreshing(false);
+    }
 
     public void showHideListViews(boolean toggle){
         if(toggle){
@@ -172,7 +199,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
     /**
      * This function displays account information
      */
-    public void displaysAccountInfo(){
+    public void displaysPictures(){
         // TODO fill counters
 
         //TODO fill listView
