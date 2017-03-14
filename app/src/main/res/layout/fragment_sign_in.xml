@@ -18,7 +18,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_above="@+id/signin_form_layout">
+        android:layout_above="@+id/signin_form_layout"
+        android:layout_marginBottom="30dp">
 
         <ImageView
             android:id="@+id/logo_imageView"
@@ -49,6 +50,15 @@
         android:background="#5111"
         android:orientation="vertical"
         android:layout_above="@+id/submit_btn">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:gravity="center_horizontal|center_vertical"
+            android:textAllCaps="true"
+            android:text="@string/signin_text"/>
 
         <TextView
             android:layout_width="match_parent"

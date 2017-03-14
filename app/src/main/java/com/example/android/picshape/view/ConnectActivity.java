@@ -76,9 +76,11 @@ public class ConnectActivity extends AppCompatActivity {
      * This function setup ViewPager with Sign Fragment
      * @param viewPager
      */
-    private void setupViewPager(final ViewPager viewPager) {
-        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new SignFragment(), "Sign");
+        adapter.addFragment(new SignInFragment(), "Sign In");
+        adapter.addFragment(new SignUpFragment(), "Sign Up");
         viewPager.setAdapter(adapter);
 
     }
@@ -88,16 +90,7 @@ public class ConnectActivity extends AppCompatActivity {
      */
     public void launchSignInFragment(){
 
-        if(viewPager.getAdapter().getCount() > 1) {{
-            ((ViewPagerAdapter) viewPager.getAdapter()).removeFragment(1);
-        }}
-
-        Log.v(LOG_TAG,"Creation signIN  ");
-        ((ViewPagerAdapter) viewPager.getAdapter()).addFragment(new SignInFragment(), "Sign in");
-
-        if(viewPager.getAdapter().getCount() > 0) {
-            viewPager.setCurrentItem(1);
-        }
+        viewPager.setCurrentItem(1, true);
 
     }
 
@@ -106,16 +99,7 @@ public class ConnectActivity extends AppCompatActivity {
      */
     public void launchSignUpFragment(){
 
-        if(viewPager.getAdapter().getCount() > 1) {{
-            ((ViewPagerAdapter) viewPager.getAdapter()).removeFragment(1);
-
-        }}
-
-        Log.v(LOG_TAG,"Creation signUPPPPP");
-        ((ViewPagerAdapter) viewPager.getAdapter()).addFragment(new SignUpFragment(), "Sign up");
-        if(viewPager.getAdapter().getCount() > 0) {
-            viewPager.setCurrentItem(1);
-        }
+        viewPager.setCurrentItem(2, true);
 
     }
 

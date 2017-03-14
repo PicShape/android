@@ -1,9 +1,13 @@
 package com.example.android.picshape.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountSingleton;
+import com.example.android.picshape.dao.PicSingleton;
 import com.example.android.picshape.dao.PictureAccess;
 import com.example.android.picshape.model.PicshapeAccount;
 import com.example.android.picshape.model.PictureShape;
@@ -80,6 +86,15 @@ public class SinglePicActivity extends AppCompatActivity {
                             .into(mPicture);
                     converted = true;
                 }
+            }
+        });
+
+        mPicture.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                showSaveDialog();
+                return true;
             }
         });
 
@@ -156,6 +171,46 @@ public class SinglePicActivity extends AppCompatActivity {
      */
     public void showText(String text){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+    }
+
+
+    /**
+     * This function shows dialog to save picture to memory
+     */
+    public void showSaveDialog(){
+        final CharSequence[] items = { "Save Photo", "Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(SinglePicActivity.this);
+
+        builder.setTitle("Save Photo");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Save Photo")) {
+                    if ( savePicture() ) showText("Done !");
+                    else showText("Error");
+                }
+                else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    /**
+     * This function saves picture in internal memory
+     * @return
+     */
+    public boolean savePicture(){
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                ((GlideBitmapDrawable) mPicture.getDrawable()).getBitmap(),
+                "pichsape"+ System.currentTimeMillis(),
+                "PicShape");
+
+        if(path != null) return true;
+
+        return false;
     }
 
     /**

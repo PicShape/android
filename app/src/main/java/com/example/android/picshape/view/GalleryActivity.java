@@ -21,6 +21,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
@@ -28,6 +32,7 @@ import com.example.android.picshape.dao.PictureAccess;
 import com.example.android.picshape.model.PicshapeAccount;
 import com.example.android.picshape.model.PictureShape;
 import com.example.android.picshape.service.UploadPicShapeService;
+import com.github.siyamed.shapeimageview.CircularImageView;
 
 import java.util.ArrayList;
 
@@ -44,6 +49,7 @@ public class GalleryActivity extends AppCompatActivity {
     private GridView mGridView;
     private GalleryAdapter mAdpaterGallery;
     private ProgressBar mGalleryProBar;
+    private CircularImageView mProfilPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +111,7 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
+        if(AccountSingleton.getInstance().getAccountLoaded() != null && AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
             registerReceiver(receiver, new IntentFilter(
                     UploadPicShapeService.RECEIVER));
         }
@@ -114,7 +120,7 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
+        if(AccountSingleton.getInstance().getAccountLoaded() != null && AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
             unregisterReceiver(receiver);
         }
     }
@@ -166,6 +172,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         mGalleryProBar = (ProgressBar) findViewById(R.id.gallery_progressBar);
 
+        mProfilPic = (CircularImageView) findViewById(R.id.profile_pic_imageView);
     }
 
     /**
@@ -237,6 +244,15 @@ public class GalleryActivity extends AppCompatActivity {
                 startActivity(singlePicIntent);
             }
         });
+    }
+
+
+    public void updateProfilPic(PictureShape pic){
+
+        Glide.with(mProfilPic.getContext())
+                .load(pic.getUrlConverted()).asBitmap()
+                .into(mProfilPic);
+
     }
 
     /**
@@ -352,8 +368,9 @@ public class GalleryActivity extends AppCompatActivity {
             stopLoading();
             if("1".equals(mode)){
 
-                if(listShape != null){
+                if(listShape != null && listShape.size() > 0){
                     fillGridPicture(listShape);
+                    updateProfilPic(listShape.get(0));
                 }
                 else{
                     // NO pic ?

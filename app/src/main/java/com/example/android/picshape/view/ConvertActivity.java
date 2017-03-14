@@ -1,10 +1,14 @@
 package com.example.android.picshape.view;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,15 +18,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.android.picshape.R;
 import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.PicSingleton;
 import com.example.android.picshape.utility.ExpandAnimation;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ConvertActivity extends AppCompatActivity {
@@ -32,6 +37,7 @@ public class ConvertActivity extends AppCompatActivity {
     private boolean mChoosen = false;
     private Bitmap mImgBitMap;
     private ImageView mImgChoosen;
+    private Uri mImageUri;
 
     // Views
     private Button mBtnWall, mBtnGallery, mBtnConvert;
@@ -289,6 +295,13 @@ public class ConvertActivity extends AppCompatActivity {
      */
     public void launchCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        mImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ContentValues());
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                mImageUri);
+
+
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -313,7 +326,7 @@ public class ConvertActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data == null) {
+        if (data == null && mImageUri == null) {
             showHideButton(false);
         }
         else {
@@ -385,14 +398,27 @@ public class ConvertActivity extends AppCompatActivity {
      */
     private Bitmap onCaptureImageResult(Intent data) {
 
-        Bitmap picCaptured = (Bitmap) data.getExtras().get("data");
-        mImgBitMap = picCaptured;
+        //Bitmap picCaptured = (Bitmap) data.getExtras().get("data");
+
+        try {
+            mImgBitMap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        //mImgChoosen.setImageURI(mImageUri);
+
+        Glide.with(this)
+                .load(mImageUri) // Uri of the picture
+        .into(mImgChoosen);
+
         PicSingleton.getInstance().setPicToShape(mImgBitMap);
 
-        mImgChoosen.setImageBitmap(picCaptured);
+        return  mImgBitMap;
 
-        return picCaptured;
 
     }
+
+
 
 }

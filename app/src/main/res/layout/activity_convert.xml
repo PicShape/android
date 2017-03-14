@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1"
+
     tools:context="com.example.android.picshape.view.ConvertActivity"
     android:background="@color/primary">
 
@@ -96,8 +96,7 @@
     <LinearLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_height="55dp"
         android:orientation="horizontal"
         android:background="@color/primary"
         >

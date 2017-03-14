@@ -109,7 +109,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     /**
-     * This function saves picture on memory
+     * This function saves picture in internal memory
      * @return
      */
     public boolean savePicture(){

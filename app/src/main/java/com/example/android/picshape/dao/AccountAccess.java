@@ -125,7 +125,6 @@ public class AccountAccess {
         return null;
     }
 
-
     /**
      * This function register user to the service
      * @param urlWebService
@@ -213,9 +212,11 @@ public class AccountAccess {
         return null;
     }
 
-
-
-
+    /**
+     * This function delete User token in internal memory
+     * @param context
+     * @return
+     */
     public static boolean logOff(Context context){
 
         //TODO
@@ -637,13 +638,9 @@ public class AccountAccess {
     }
 
 
+    public void handleUnauthorized(){
+        //TODO tell user to reconnect
 
-    public static Bitmap getPictureById(int pictureId, PicshapeAccount account){
-
-
-        //TODO
-
-        return null;
     }
 
 

@@ -9,6 +9,7 @@
 
     tools:context="com.example.android.picshape.view.GalleryActivity">
 
+    <!-- Loading -->
     <LinearLayout
         android:id="@+id/loading_layout"
         android:layout_width="match_parent"
@@ -26,17 +27,24 @@
             android:layout_marginLeft="10dp"
             android:text="Upload..."/>
 
-        <io.github.yuweiguocn.lib.squareloading.SquareLoading
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:squareColor="@color/accent_green"
-            app:squareSize="8dp"
-            app:squareCorner="2dp"
-            app:dividerSize="2dp"
-            app:xCount="6"
-            app:yCount="3"
-            />
 
+
+        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:spb_sections_count="4"
+            app:spb_color="@color/accent_green"
+            app:spb_speed="2.0"
+            app:spb_stroke_width="4dp"
+            app:spb_stroke_separator_length="4dp"
+            app:spb_reversed="false"
+            app:spb_mirror_mode="false"
+            app:spb_interpolator="spb_interpolator_accelerate"
+            app:spb_progressiveStart_activated="true"
+            app:spb_progressiveStart_speed="1.0"
+            app:spb_progressiveStop_speed="2.4"
+            />
 
     </LinearLayout>
 
@@ -200,8 +208,7 @@
     <LinearLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_height="55dp"
         android:orientation="horizontal"
         android:background="@color/primary"
         >

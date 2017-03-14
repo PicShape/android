@@ -1,121 +1,140 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     tools:context="com.example.android.picshape.view.SinglePicActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:weightSum="3"
-        android:padding="5dp"
-        android:orientation="horizontal"
-        android:background="@color/primary"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:weightSum="3"
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:background="@color/primary"
+            >
 
-            <com.github.siyamed.shapeimageview.CircularImageView
-                android:id="@+id/profile_pic_imageView"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:src="@drawable/genie"
-                app:siBorderWidth="2dp"
-                app:siBorderColor="@color/accent_green"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:id="@+id/profile_pic_imageView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/genie"
+                    app:siBorderWidth="2dp"
+                    app:siBorderColor="@color/accent_green"/>
+
+                <TextView
+                    android:id="@+id/name_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:text="John Malkovic"/>
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/name_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textStyle="bold"
+                android:id="@+id/pic_name_textView"
+                android:layout_width="0dp"
+                android:layout_weight="1.9"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:text="John Malkovic"/>
+                android:textSize="14sp"
+                android:text="Landscape"/>
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:background="@drawable/delete_button"
+                android:visibility="gone"/>
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/pic_name_textView"
-            android:layout_width="0dp"
-            android:layout_weight="1.9"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:text="Landscape"/>
-
-        <Button
-            android:id="@+id/delete_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:background="@drawable/delete_button"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/primary"
-        />
-
-    <ImageView
-        android:id="@+id/picture_imageView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7"
-        android:src="@drawable/back_welcome_picshape"/>
-
-    <ProgressBar
-        android:id="@+id/single_pic_progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7"
-        android:visibility="gone"/>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/primary"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:orientation="vertical"
-        android:background="@color/primary"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:textColor="@android:color/white"
-            android:layout_marginLeft="10dp"
-            android:text="Comments"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/white"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
+            android:layout_height="2dp"
+            android:background="@color/primary"
             />
 
+        <ImageView
+            android:id="@+id/picture_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:background="@android:color/black"
+            android:src="@drawable/back_welcome_picshape"/>
 
+        <ProgressBar
+            android:id="@+id/single_pic_progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:visibility="gone"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+
+            android:orientation="vertical"
+            android:background="@color/primary"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="10dp"
+                    android:text="Comments"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/down"/>
+            </LinearLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                />
+
+
+        </LinearLayout>
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/add"/>
 
-</LinearLayout>
+</RelativeLayout>
