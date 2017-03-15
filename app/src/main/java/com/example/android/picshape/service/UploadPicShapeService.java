@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
@@ -48,6 +49,8 @@ public class UploadPicShapeService extends IntentService {
 
     private static final String LOG_TAG = "PICTURE UPLOAD SING";
 
+    public static final int ERROR_UNAUTHORIZED = 401;
+
     public UploadPicShapeService() {
         super("Upload PicShape");
         onLoad = false;
@@ -70,9 +73,13 @@ public class UploadPicShapeService extends IntentService {
             Log.v(LOG_TAG, "url : "+ mUrlToThePic);
             publishResults(mUrlToThePic, RESULT_OK);
         }
+        else if (send == ERROR_UNAUTHORIZED){
+            // Echec
+            publishResults(null, ERROR_UNAUTHORIZED);
+        }
         else {
             // Echec
-            publishResults(null, -1);
+            publishResults(null, RESULT_CANCELED);
         }
     }
 
@@ -251,6 +258,9 @@ public class UploadPicShapeService extends IntentService {
 
                 // Retrieve url from JSON
                 getUrlFromJSON(returnedJSON);
+            }
+            else if(serverResponseCode == ERROR_UNAUTHORIZED){
+                return serverResponseCode;
             }
 
 

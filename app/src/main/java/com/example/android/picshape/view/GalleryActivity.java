@@ -3,11 +3,13 @@ package com.example.android.picshape.view;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,6 +28,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.example.android.picshape.R;
+import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.AccountAccess;
 import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PictureAccess;
@@ -126,7 +129,6 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
@@ -140,7 +142,10 @@ public class GalleryActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                     if(mLoadinglayout != null) mLoadinglayout.setVisibility(GONE);
                     getAccountPicture(mProfil.getName());
-                } else {
+                } else if(resultCode == UploadPicShapeService.ERROR_UNAUTHORIZED) {
+                    askReconnect();
+                }
+                else{
                     Toast.makeText(GalleryActivity.this, "Upload failed",
                             Toast.LENGTH_LONG).show();
 
@@ -286,6 +291,27 @@ public class GalleryActivity extends AppCompatActivity {
         if(intent.resolveActivity(this.getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    public void askReconnect(){
+        final CharSequence[] items = { "Sign in",
+                "Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(GalleryActivity.this);
+        builder.setTitle("Unauthorized action, you need to log in");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result= Utility.checkPermission(GalleryActivity.this);
+                if (items[item].equals("Log in")) {
+                    logoff();
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+
+        builder.show();
     }
 
     public void launchWall(View v){
