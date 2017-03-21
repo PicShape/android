@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- Pictures info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -54,7 +55,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:text="Landscape"/>
+                android:text="Amazing"/>
 
             <Button
                 android:id="@+id/delete_button"
@@ -66,17 +67,13 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/primary"
-            />
+
 
         <ImageView
             android:id="@+id/picture_imageView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7"
+            android:layout_weight="0.8"
             android:background="@android:color/black"
             android:src="@drawable/back_welcome_picshape"/>
 
@@ -88,18 +85,13 @@
             android:visibility="gone"/>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/primary"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
 
             android:orientation="vertical"
             android:background="@color/primary"
+            android:visibility="gone"
             >
 
             <LinearLayout
@@ -135,6 +127,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
+        android:onClick="postComment"
         android:src="@drawable/add"/>
 
 </RelativeLayout>

@@ -24,9 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.example.android.picshape.R;
 import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.AccountAccess;
@@ -199,13 +196,16 @@ public class GalleryActivity extends AppCompatActivity {
      */
     public void displaysAccountInfo(){
 
-        // TODO fill name & picture
         mAccountName.setText(mProfil.getName());
 
         // TODO fill counters
 
         //TODO fill listView
-       getAccountPicture(mProfil.getName());
+        getAccountPicture(mProfil.getName());
+
+        updateProfilPic(mProfil.getUrlGravatar());
+
+
     }
 
 
@@ -251,11 +251,16 @@ public class GalleryActivity extends AppCompatActivity {
         });
     }
 
+    public void fillCounter(int nbPic, int nbLike, int nbFriend){
+        String nbrPic = nbPic+"";
+        mCounterPicTv.setText(nbrPic);
+    }
 
-    public void updateProfilPic(PictureShape pic){
+    public void updateProfilPic(String picUrl){
 
         Glide.with(mProfilPic.getContext())
-                .load(pic.getUrlConverted()).asBitmap()
+                .load(picUrl)
+                .asBitmap()
                 .into(mProfilPic);
 
     }
@@ -396,10 +401,11 @@ public class GalleryActivity extends AppCompatActivity {
 
                 if(listShape != null && listShape.size() > 0){
                     fillGridPicture(listShape);
-                    updateProfilPic(listShape.get(0));
+                    fillCounter(listShape.size(), 0, 0);
                 }
                 else{
                     // NO pic ?
+                    fillCounter(0, 0, 0);
                 }
             }
 

@@ -66,7 +66,6 @@ public class PictureAdapter extends BaseAdapter {
 
             viewHolder = new myConvertView();
             viewHolder.userTv = (TextView) convertView.findViewById(R.id.name_user_textView);
-            viewHolder.titleTv = (TextView) convertView.findViewById(R.id.title_pic_textView);
             viewHolder.picIv = (ImageView) convertView.findViewById(R.id.pic_imageView);
 
 
@@ -87,7 +86,7 @@ public class PictureAdapter extends BaseAdapter {
 
         Glide.with(viewHolder.picIv.getContext()).load(picture.getUrlConverted()).into(viewHolder.picIv);
         viewHolder.userTv.setText(picture.getIdUser());
-        viewHolder.titleTv.setText(picture.getDescription());
+
 
         viewHolder.userTv.setOnClickListener(mOnClickListener);
 

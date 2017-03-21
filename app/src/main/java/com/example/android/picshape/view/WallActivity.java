@@ -215,8 +215,6 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
      */
     public void getUsersPictures(){
 
-        String name = AccountSingleton.getInstance().getAccountLoaded().getName();
-
 
         WallTask task = new WallTask();
         //String url = "https://picshape-engine-develop.herokuapp.com/api/account/login";
@@ -229,7 +227,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
         String routeUsers = "users/";
         String routePictures = "gallery/photos/";
 
-        task.execute(url,routeUsers, routePictures, name, "1");
+        task.execute(url,routeUsers, routePictures, null, "1");
     }
 
     /**
@@ -277,7 +275,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 String name = ((TextView)view).getText().toString();
                 Intent galleryIntent = new Intent(WallActivity.this, GalleryActivity.class);
-                galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null));
+                galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null, null));
 
                 if (galleryIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(galleryIntent);
@@ -451,7 +449,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
 
             String name = ((TextView)v).getText().toString();
             Intent galleryIntent = new Intent(WallActivity.this, GalleryActivity.class);
-            galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null));
+            galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null, null));
 
             if (galleryIntent.resolveActivity(getPackageManager()) != null) {
                 startActivity(galleryIntent);

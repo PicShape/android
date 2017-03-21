@@ -101,8 +101,9 @@ public class Utility {
 
             String name = jObject.getString("name");
             String email = jObject.getString("email");
+            String urlGravatar = jObject.getString("gravatar");
 
-            return new PicshapeAccount("1", name, email, token);
+            return new PicshapeAccount("1", name, email, token, urlGravatar);
 
         } catch (JSONException e) {
             Log.e("JSONException", "Error: " + e.toString());
@@ -147,7 +148,7 @@ public class Utility {
         String json= "{";
 
         //Token
-        json += "\"token\": "+account.getToken()+", ";
+        json += "\"token\": \""+account.getToken()+"\", ";
 
         // User
         json += "\"user\": { ";
@@ -155,10 +156,11 @@ public class Utility {
         // id
         json+="\"id\":"+account.getId()+", ";
         // Name
-        json+="\"name\":"+account.getName()+", ";
+        json+="\"name\":\""+account.getName()+"\", ";
         // Email
-        json+="\"email\":"+account.getEmail();
-
+        json+="\"email\":\""+account.getEmail()+"\", ";
+        // Url Gravatar
+        json+="\"gravatar\":\""+account.getUrlGravatar()+"\"";
 
         // End of user
         json += "}";

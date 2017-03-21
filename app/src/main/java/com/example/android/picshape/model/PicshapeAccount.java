@@ -15,12 +15,14 @@ public class PicshapeAccount implements Parcelable{
     private String name;
     private String email;
     private String token;
+    private String urlGravatar;
 
-    public PicshapeAccount(String id, String name, String email, String token){
+    public PicshapeAccount(String id, String name, String email, String token, String urlGravatar){
         this.id = id ;
         this.name = name;
         this.email = email;
         this.token = token;
+        this.urlGravatar = urlGravatar;
     }
 
 
@@ -58,6 +60,14 @@ public class PicshapeAccount implements Parcelable{
         this.token = token;
     }
 
+    public String getUrlGravatar() {
+        return urlGravatar;
+    }
+
+    public void setUrlGravatar(String urlGravatar) {
+        this.urlGravatar = urlGravatar;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -69,6 +79,7 @@ public class PicshapeAccount implements Parcelable{
         dest.writeString(name);
         dest.writeString(email);
         dest.writeString(token);
+        dest.writeString(urlGravatar);
     }
 
     public static final Parcelable.Creator<PicshapeAccount> CREATOR = new Parcelable.Creator<PicshapeAccount>()
@@ -91,7 +102,7 @@ public class PicshapeAccount implements Parcelable{
         this.name = in.readString();
         this.email = in.readString();
         this.token = in.readString();
-
+        this.urlGravatar = in.readString();
 
     }
 

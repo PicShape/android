@@ -106,7 +106,7 @@ public class SinglePicActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = ((TextView)v).getText().toString();
                 Intent galleryIntent = new Intent(SinglePicActivity.this, GalleryActivity.class);
-                galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null));
+                galleryIntent.putExtra("account", new PicshapeAccount("-1", name, null, null, null));
 
                 if (galleryIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(galleryIntent);
@@ -147,6 +147,14 @@ public class SinglePicActivity extends AppCompatActivity {
         task.execute(url, token);
     }
 
+    /**
+     * This function post a comment to the picture
+     * @param v
+     */
+    public void postComment(View v){
+        //TODO it miss comment function on the back
+        showText("Comment feature soon available");
+    }
 
     public void startLoading(){
         mPicture.setVisibility(View.GONE);
@@ -172,7 +180,6 @@ public class SinglePicActivity extends AppCompatActivity {
     public void showText(String text){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
-
 
     /**
      * This function shows dialog to save picture to memory
@@ -212,6 +219,8 @@ public class SinglePicActivity extends AppCompatActivity {
 
         return false;
     }
+
+
 
     /**
      * This class manages the http call to webService
