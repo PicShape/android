@@ -63,15 +63,21 @@ public class GalleryActivity extends AppCompatActivity {
         if( galleryBundle != null) {
             profil = (PicshapeAccount) galleryBundle.get("account");
         }
+
+
         if( profil != null){
             mProfil = profil;
         }
-        else{
+        else if (AccountSingleton.getInstance().getAccountLoaded() != null ){
             mProfil = AccountSingleton.getInstance().getAccountLoaded();
+        }
+        else{
+            // No account go back to connect activity
+            startActivity(new Intent(GalleryActivity.this, ConnectActivity.class));
         }
 
 
-        if(mProfil != null) displaysAccountInfo();
+        if(mProfil != null) displaysAccountInfoAndPictures();
     }
 
     @Override
@@ -112,8 +118,12 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(AccountSingleton.getInstance().getAccountLoaded() != null && AccountSingleton.getInstance().getAccountLoaded().equals(mProfil)) {
-            registerReceiver(receiver, new IntentFilter(
-                    UploadPicShapeService.RECEIVER));
+            registerReceiver(receiver, new IntentFilter( UploadPicShapeService.RECEIVER ));
+        }
+
+        if(AccountSingleton.getInstance().getAccountLoaded() == null){
+            // No account go back to connect activity
+            startActivity(new Intent(GalleryActivity.this, ConnectActivity.class));
         }
     }
 
@@ -135,10 +145,10 @@ public class GalleryActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     String urlNewPic = bundle.getString(UploadPicShapeService.URLPIC);
                     Toast.makeText(GalleryActivity.this,
-                            "Upload complete. Download URI: " + urlNewPic,
+                            "Upload complete !",
                             Toast.LENGTH_LONG).show();
                     if(mLoadinglayout != null) mLoadinglayout.setVisibility(GONE);
-                    getAccountPicture(mProfil.getName());
+                    getAccountPictures(mProfil.getName());
                 } else if(resultCode == UploadPicShapeService.ERROR_UNAUTHORIZED) {
                     askReconnect();
                 }
@@ -194,25 +204,44 @@ public class GalleryActivity extends AppCompatActivity {
     /**
      * This function displays account information
      */
-    public void displaysAccountInfo(){
+    public void displaysAccountInfoAndPictures(){
 
         mAccountName.setText(mProfil.getName());
 
-        // TODO fill counters
 
-        //TODO fill listView
-        getAccountPicture(mProfil.getName());
+        getAccountPictures(mProfil.getName());
 
-        updateProfilPic(mProfil.getUrlGravatar());
 
+        if(mProfil.getUrlGravatar() == null){
+            getPictureAccount(mProfil.getName());
+        }
+        else {
+            updateProfilPic(mProfil.getUrlGravatar());
+        }
 
     }
 
 
     /**
+     * This function get the picture's user
+     * @param name
+     */
+    public void getPictureAccount(String name){
+        if(name != null){
+            GalleryTask task = new GalleryTask();
+
+            String route = "/api/users/";
+            SharedPreferences preferences =  PreferenceManager.getDefaultSharedPreferences(this);
+            String url = preferences.getString(getString(R.string.pref_url_key),getString(R.string.pref_url_default))+route;
+
+            task.execute(url, name, GalleryTask.MODE_USER);
+        }
+    }
+
+    /**
      * This function create a task to get profil pictures
      */
-    public void getAccountPicture(String name){
+    public void getAccountPictures(String name){
 
 
         GalleryTask task = new GalleryTask();
@@ -224,7 +253,7 @@ public class GalleryActivity extends AppCompatActivity {
         SharedPreferences preferences =  PreferenceManager.getDefaultSharedPreferences(this);
         String url = preferences.getString(getString(R.string.pref_url_key),getString(R.string.pref_url_default))+route;
 
-        task.execute(url, name, "1");
+        task.execute(url, name, GalleryTask.MODE_PICTURE);
     }
 
 
@@ -352,8 +381,10 @@ public class GalleryActivity extends AppCompatActivity {
      */
     class GalleryTask extends AsyncTask<String, Void, Integer> {
 
-        private final String LOG_TAG = SignInFragment.SignInTask.class.getName();
-        private PicshapeAccount userAccount;
+        public static final String MODE_PICTURE = "1";
+        public static final String MODE_USER = "2";
+
+        private PicshapeAccount mUserAccount;
         private String mode ;
         private ArrayList<PictureShape> listShape;
 
@@ -381,8 +412,12 @@ public class GalleryActivity extends AppCompatActivity {
 
             mode = params[2];
 
-            if("1".equals(mode)){
+            if(MODE_PICTURE.equals(mode)){
                 listShape = PictureAccess.getProfilPicturesList(url, name);
+            }
+            else if(MODE_USER.equals(mode)){
+                mUserAccount = AccountAccess.getUserByName(url, name);
+                if( mUserAccount != null ) return 0;
             }
 
 
@@ -397,7 +432,7 @@ public class GalleryActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer result) {
             stopLoading();
-            if("1".equals(mode)){
+            if(MODE_PICTURE.equals(mode)){
 
                 if(listShape != null && listShape.size() > 0){
                     fillGridPicture(listShape);
@@ -406,6 +441,12 @@ public class GalleryActivity extends AppCompatActivity {
                 else{
                     // NO pic ?
                     fillCounter(0, 0, 0);
+                }
+            }
+            else if(MODE_USER.equals(mode)){
+                if(mUserAccount != null) {
+                    mProfil = mUserAccount;
+                    updateProfilPic(mProfil.getUrlGravatar());
                 }
             }
 

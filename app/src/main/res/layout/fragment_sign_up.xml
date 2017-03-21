@@ -77,7 +77,7 @@
             android:inputType="textPersonName"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
-            android:hint="Pichshape"
+            android:hint="Picshape"
             android:ems="10"
             android:id="@+id/pseudo_editText" />
 

@@ -637,10 +637,72 @@ public class AccountAccess {
         return null;
     }
 
+    /**
+     * This function return an account from a name passed in parameters
+     * @param urlRoute
+     * @param name
+     * @return
+     */
+    public static PicshapeAccount getUserByName(String urlRoute, String name){
 
-    public void handleUnauthorized(){
-        //TODO tell user to reconnect
+        HttpURLConnection urlConnection = null;
+        int serverResponseCode = 0;
 
+
+        try {
+
+            String urlString = urlRoute+name;
+
+            URL url = new URL(urlString);
+
+            // Create the request to Webservice and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
+            Log.i("AccountACCESS","url : "+urlConnection.getURL());
+            urlConnection.setConnectTimeout(8000);
+            urlConnection.setRequestMethod("GET"); // Request type
+
+
+            // Responses from the server (code and message)
+            serverResponseCode = urlConnection.getResponseCode();
+            String serverResponseMessage = urlConnection.getResponseMessage();
+
+            Log.i("AccountACCESS","Response code : "+serverResponseCode+" || "+serverResponseMessage);
+
+            if(serverResponseCode == 200){
+
+                // We get the returned from the request
+                String returnedJSON;
+
+                InputStream is = urlConnection.getInputStream();
+
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line2 = null;
+                while ((line2 = bReader.readLine()) != null) {
+                    sBuilder.append(line2 + "\n");
+                }
+
+                is.close();
+                returnedJSON = sBuilder.toString();
+
+                // TODO clean
+                Log.v("AccountACCESS","json : "+returnedJSON);
+
+                urlConnection.disconnect();
+
+                return Utility.getAccountFromJSONv2(returnedJSON);
+            }
+
+
+
+        } catch (IOException e) {
+            Log.e("PICTURE ACCESSS", "Error "+e.getMessage(), e);
+
+            return null;
+        }
+
+        return null;
     }
 
 

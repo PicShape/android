@@ -112,6 +112,34 @@ public class Utility {
     }
 
     /**
+     * This function get the account info from JSON String for the second version of User JSON
+     * @param jsonString
+     */
+    public static PicshapeAccount getAccountFromJSONv2(String jsonString){
+        //parse JSON data
+        try {
+
+            Log.v("ACCOUNT ACCESS", "T : "+jsonString);
+
+            JSONObject jsonAll = new JSONObject(jsonString);
+            JSONArray jsonUsers = jsonAll.getJSONArray("users");
+
+
+            JSONObject jObject = (JSONObject) jsonUsers.get(0);
+
+            String name = jObject.getString("name");
+            //String email = jObject.getString("email");
+            String urlGravatar = jObject.getString("gravatar");
+
+            return new PicshapeAccount("1", name, null, null, urlGravatar);
+
+        } catch (JSONException e) {
+            Log.e("JSONException", "Error: " + e.toString());
+            return null;
+        }
+    }
+
+    /**
      * This function get accounts name from JSON String
      * @param jsonString
      */
@@ -172,7 +200,37 @@ public class Utility {
 
 
     /**
-     * This function get PictureShape's from JSON
+     * This function get PictureShape from JSON
+     */
+    public static PictureShape getPictureFromJSON(String jsonString){
+
+        if(jsonString != null){
+
+            PictureShape tempShape;
+            try {
+                JSONObject jsonAll = new JSONObject(jsonString);
+
+                String user = jsonAll.getString("user");
+                String thumbnail =jsonAll.getString("thumbnail");
+                String photo = jsonAll.getString("photo");
+                String converted = jsonAll.getString("converted");
+                String timestamp = jsonAll.getString("timestamp");
+
+                tempShape = new PictureShape(user, photo, "Description", converted, thumbnail, photo, timestamp);
+
+                return tempShape;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * This function get PictureShapes from JSON
      */
     public static ArrayList<PictureShape> getPicturesFromJSON(String jsonString){
 

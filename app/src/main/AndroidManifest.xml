@@ -23,10 +23,6 @@
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".view.ResultActivity">
-            android:parentActivityName=".WelcomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.WelcomeActivity" />
         </activity>
         <activity android:name=".view.ConnectActivity">
             <intent-filter>
@@ -36,10 +32,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.SinglePicActivity" >
-        android:parentActivityName=".GalleryActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".view.GalleryActivity" />
         </activity>
         <activity android:name=".view.AccountActivity">
             android:parentActivityName=".GalleryActivity">

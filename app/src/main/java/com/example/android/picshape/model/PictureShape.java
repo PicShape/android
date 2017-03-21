@@ -17,6 +17,7 @@ public class PictureShape implements Parcelable{
     private String urlConverted;
     private String urlPhoto;
     private String urlThumb;
+    private String timestamp;
 
     public PictureShape(String description){
         this.description = description;
@@ -29,6 +30,17 @@ public class PictureShape implements Parcelable{
         this.urlConverted = urlConverted;
         this.urlPhoto = urlPhoto;
         this.urlThumb = urlThumb;
+        this.timestamp = null;
+    }
+
+    public PictureShape(String idUser, String idPic, String description, String urlConverted, String urlThumb, String urlPhoto, String timestamp) {
+        this.idUser = idUser;
+        this.idPic = idPic;
+        this.description = description;
+        this.urlConverted = urlConverted;
+        this.urlPhoto = urlPhoto;
+        this.urlThumb = urlThumb;
+        this.timestamp = timestamp;
     }
 
     public String getIdUser() {

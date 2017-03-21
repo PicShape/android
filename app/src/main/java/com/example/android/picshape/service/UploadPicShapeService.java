@@ -1,15 +1,24 @@
 package com.example.android.picshape.service;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.android.picshape.R;
+import com.example.android.picshape.Utility;
 import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PicSingleton;
+import com.example.android.picshape.model.PictureShape;
+import com.example.android.picshape.view.GalleryActivity;
+import com.example.android.picshape.view.SinglePicActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +45,7 @@ import static android.app.Activity.RESULT_OK;
 public class UploadPicShapeService extends IntentService {
 
 
-    private static String mUrlToThePic;
+    private static PictureShape mPicShaped;
     public static boolean onLoad;
 
     public static final String mParamIter = "iter";
@@ -50,6 +59,8 @@ public class UploadPicShapeService extends IntentService {
     private static final String LOG_TAG = "PICTURE UPLOAD SING";
 
     public static final int ERROR_UNAUTHORIZED = 401;
+
+    public static final int mId = 12;
 
     public UploadPicShapeService() {
         super("Upload PicShape");
@@ -68,10 +79,10 @@ public class UploadPicShapeService extends IntentService {
 
         send = sendPic(url, nbrIteration, mode, format);
 
-        if(send != -1 && mUrlToThePic != null){
+        if(send != -1 && mPicShaped != null){
             // Success
-            Log.v(LOG_TAG, "url : "+ mUrlToThePic);
-            publishResults(mUrlToThePic, RESULT_OK);
+            Log.v(LOG_TAG, "Pic : "+ mPicShaped);
+            publishResults(mPicShaped, RESULT_OK);
         }
         else if (send == ERROR_UNAUTHORIZED){
             // Echec
@@ -83,15 +94,52 @@ public class UploadPicShapeService extends IntentService {
         }
     }
 
-    private void publishResults(String urlToThePic, int result) {
+    private void publishResults(PictureShape picShaped, int result) {
+
+        if(result == RESULT_OK) createNotification("PicShape", "Your picture was successfully uploaded", result);
+        else createNotification("PicShape", "Picture upload failed :(", result);
         Intent intent = new Intent(RECEIVER);
-        intent.putExtra(URLPIC, urlToThePic);
         intent.putExtra(RESULT, result);
         sendBroadcast(intent);
 
     }
 
+    private void createNotification(String title, String text, int result){
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.logo2)
+                        .setContentTitle(title)
+                        .setContentText(text);
+        // Creates an explicit intent for an Activity in your app
+                Intent resultIntent = null;
+                if(result == RESULT_OK) resultIntent = new Intent(this, SinglePicActivity.class);
+                else resultIntent = new Intent(this, GalleryActivity.class);
 
+                String username = AccountSingleton.getInstance().getAccountLoaded().getName();
+
+                resultIntent.putExtra("username", username);
+                resultIntent.putExtra("pic", mPicShaped);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(GalleryActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent =
+                        stackBuilder.getPendingIntent(
+                                0,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+                mNotificationManager.notify(mId, mBuilder.build());
+    }
 
     /**
      * This function send picture to server to be converted
@@ -256,8 +304,24 @@ public class UploadPicShapeService extends IntentService {
                 is.close();
                 returnedJSON = sBuilder.toString();
 
-                // Retrieve url from JSON
-                getUrlFromJSON(returnedJSON);
+                // Retrieve urls from JSON
+                mPicShaped =  Utility.getPictureFromJSON(returnedJSON);
+
+                if (path != null) {
+                    // Delete the temp file
+                    if (deleteTempFile(path)) Log.v(LOG_TAG, "File deleted");
+                    else Log.v(LOG_TAG, "Error File isn't deleted");
+
+                }
+
+                if (urlConnection != null) {
+                    // Close connection
+                    urlConnection.disconnect();
+
+                    return serverResponseCode;
+                }
+
+
             }
             else if(serverResponseCode == ERROR_UNAUTHORIZED){
                 return serverResponseCode;
@@ -270,22 +334,7 @@ public class UploadPicShapeService extends IntentService {
 
             return -1;
         }
-        finally{
-            if (path != null) {
-                // Delete the temp file
-                if (deleteTempFile(path)) Log.v(LOG_TAG, "File deleted");
-                else Log.v(LOG_TAG, "Error File isn't deleted");
 
-            }
-
-            if (urlConnection != null) {
-                // Close connection
-                urlConnection.disconnect();
-
-                return serverResponseCode;
-            }
-
-        }
 
         return -1;
     }
@@ -326,20 +375,7 @@ public class UploadPicShapeService extends IntentService {
     }
 
 
-    /**
-     * This function get the URL from JSON String
-     * @param jsonString
-     */
-    protected static void getUrlFromJSON(String jsonString){
-        //parse JSON data
-        try {
-            JSONObject jObject = new JSONObject(jsonString);
-            mUrlToThePic = jObject.getString("url");
 
-        } catch (JSONException e) {
-            Log.e("JSONException", "Error: " + e.toString());
-        }
-    }
 
 
 }

@@ -1,9 +1,7 @@
 package com.example.android.picshape.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -77,7 +75,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showLoader();
-                signIn();
+                signUp();
             }
         });
     }
@@ -86,7 +84,7 @@ public class SignUpFragment extends Fragment {
     /**
      * This function get the fields and call the account request function
      */
-    public int signIn(){
+    public int signUp(){
 
         String name = mNameEditText.getText().toString();
 
@@ -156,7 +154,7 @@ public class SignUpFragment extends Fragment {
         if(name == null || email ==  null || password == null) return false;
         // TODO email checks and password contains mandatory value
         if(name.length() > 20) return false;
-        if(password.length() > 20) return false;
+        if(password.length() > 20 && password.length() < 4) return false;
         if(email.length() > 50) return false;
 
         return true;
