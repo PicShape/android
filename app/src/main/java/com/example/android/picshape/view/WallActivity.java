@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.example.android.picshape.R;
 import com.example.android.picshape.dao.AccountAccess;
-import com.example.android.picshape.dao.AccountSingleton;
 import com.example.android.picshape.dao.PictureAccess;
 import com.example.android.picshape.model.PicshapeAccount;
 import com.example.android.picshape.model.PictureShape;
@@ -399,7 +398,7 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
             }
             else if ("2".equals(mode)){
-                mNameList = AccountAccess.getUsers( (url+urlRouteUsers), name );
+                mNameList = AccountAccess.getUsersByName( (url+urlRouteUsers), name );
             }
 
 

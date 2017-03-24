@@ -29,74 +29,16 @@ public class PictureAccess {
      */
     public static ArrayList<PictureShape> getProfilPicturesList(String urlWebService, String name){
 
-        HttpURLConnection urlConnection = null;
-        int serverResponseCode = 0;
+        String returnedJSON = Utility.baseRequest(urlWebService+name, "GET");
 
+        ArrayList<PictureShape> picLists = Utility.getPicturesFromJSON(returnedJSON);
 
-        try {
-
-            String urlString = urlWebService+name;
-
-            URL url = new URL(urlString);
-
-            // Create the request to Webservice and open the connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            Log.i("PictureACCESS","url : "+urlConnection.getURL());
-            urlConnection.setConnectTimeout(8000);
-            urlConnection.setRequestMethod("GET"); // Request type
-
-
-            // Responses from the server (code and message)
-            serverResponseCode = urlConnection.getResponseCode();
-            String serverResponseMessage = urlConnection.getResponseMessage();
-
-            Log.i("PictureACCESS","Response code : "+serverResponseCode+" || "+serverResponseMessage);
-
-            if(serverResponseCode == 200){
-                Log.v("PictureAccess", "Request success !");
-
-                // We get the returned from the request
-                String returnedJSON;
-
-                InputStream is = urlConnection.getInputStream();
-
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
-                StringBuilder sBuilder = new StringBuilder();
-
-                String line2 = null;
-                while ((line2 = bReader.readLine()) != null) {
-                    sBuilder.append(line2 + "\n");
-                }
-
-                is.close();
-                returnedJSON = sBuilder.toString();
-
-                // TODO clean
-                Log.v("PICTURE ACCESS","json : "+returnedJSON);
-
-                urlConnection.disconnect();
-
-
-                ArrayList<PictureShape> picLists = Utility.getPicturesFromJSON(returnedJSON);
-
-                for (int i = 0; i < picLists.size(); i++) {
-                    picLists.get(i).setIdUser(name);
-                }
-
-                return picLists;
-            }
-
-
-
-        } catch (IOException e) {
-            Log.e("PICTURE ACCESSS", "Error "+e.getMessage(), e);
-
-            return null;
+        for (int i = 0; i < picLists.size(); i++) {
+            picLists.get(i).setIdUser(name);
         }
 
+        return picLists;
 
-
-        return null;
     }
 
 
@@ -109,143 +51,13 @@ public class PictureAccess {
      */
     public static boolean deletePicture(String urlWebService, String token){
 
-        HttpURLConnection urlConnection = null;
-        int serverResponseCode = 0;
+        String returnedJSON = Utility.requestBuilder(urlWebService, "DELETE", token, null);
 
-
-        try {
-
-            String urlString = urlWebService;
-
-            URL url = new URL(urlString);
-
-            // Create the request to Webservice and open the connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            Log.i("PictureACCESS","url : "+urlConnection.getURL());
-            urlConnection.setConnectTimeout(8000);
-            urlConnection.setRequestMethod("DELETE"); // Request type
-            urlConnection.setRequestProperty("Authorization", "token: "+token);
-
-
-            // Responses from the server (code and message)
-            serverResponseCode = urlConnection.getResponseCode();
-            String serverResponseMessage = urlConnection.getResponseMessage();
-
-            Log.i("PictureACCESS","Response code : "+serverResponseCode+" || "+serverResponseMessage);
-
-            if(serverResponseCode == 200){
-                Log.v("PictureAccess", "Request success !");
-
-                // We get the returned from the request
-                String returnedJSON;
-
-                InputStream is = urlConnection.getInputStream();
-
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
-                StringBuilder sBuilder = new StringBuilder();
-
-                String line2 = null;
-                while ((line2 = bReader.readLine()) != null) {
-                    sBuilder.append(line2 + "\n");
-                }
-
-                is.close();
-                returnedJSON = sBuilder.toString();
-
-                // TODO clean
-                Log.v("PICTURE ACCESS","json : "+returnedJSON);
-
-                urlConnection.disconnect();
-
-
-                return true;
-            }
-
-
-
-        } catch (IOException e) {
-            Log.e("PICTURE ACCESSS", "Error "+e.getMessage(), e);
-
-            return false;
-        }
-
-
-
-        return false;
+        if(returnedJSON != null) return true;
+        else return false;
     }
 
 
 
-    /**
-     * This function get all picture from the server
-     * @param urlWebService
-     * @param name
-     * @return
-     */
-    //UNUSED ---------------------
-    public static ArrayList<PictureShape> getAllPicturesList(String urlWebService, ArrayList<String> name){
-
-        HttpURLConnection urlConnection = null;
-        int serverResponseCode = 0;
-
-
-        try {
-
-            String urlString = urlWebService+name;
-
-            URL url = new URL(urlString);
-
-            // Create the request to Webservice and open the connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            Log.i("PictureACCESS","url : "+urlConnection.getURL());
-            urlConnection.setConnectTimeout(8000);
-            urlConnection.setRequestMethod("GET"); // Request type
-
-
-            // Responses from the server (code and message)
-            serverResponseCode = urlConnection.getResponseCode();
-            String serverResponseMessage = urlConnection.getResponseMessage();
-
-            Log.i("PictureACCESS","Response code : "+serverResponseCode+" || "+serverResponseMessage);
-
-            if(serverResponseCode == 200){
-                Log.v("PictureAccess", "Request success !");
-
-                // We get the returned from the request
-                String returnedJSON;
-
-                InputStream is = urlConnection.getInputStream();
-
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
-                StringBuilder sBuilder = new StringBuilder();
-
-                String line2 = null;
-                while ((line2 = bReader.readLine()) != null) {
-                    sBuilder.append(line2 + "\n");
-                }
-
-                is.close();
-                returnedJSON = sBuilder.toString();
-
-                // TODO clean
-                Log.v("PICTURE ACCESS","json : "+returnedJSON);
-
-                urlConnection.disconnect();
-
-                return Utility.getPicturesFromJSON(returnedJSON);
-            }
-
-
-
-        } catch (IOException e) {
-            Log.e("PICTURE ACCESSS", "Error "+e.getMessage(), e);
-
-            return null;
-        }
-
-
-
-        return null;
-    }
 
 }

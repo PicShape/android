@@ -19,6 +19,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -87,6 +94,9 @@ public class Utility {
      * @param jsonString
      */
     public static PicshapeAccount getAccountFromJSON(String jsonString){
+
+        if(jsonString == null) return null;
+
         //parse JSON data
         try {
 
@@ -283,4 +293,156 @@ public class Utility {
 
         return listSorted;
     }
+
+    /**
+     * This function send a HTTP Request
+     * @param urlPath
+     * @param method
+     * @return
+     */
+    public static String baseRequest(String urlPath, String method){
+
+
+        HttpURLConnection urlConnection = null;
+        int serverResponseCode = 0;
+
+        try {
+
+            URL url = new URL(urlPath);
+
+            // Create the request to Webservice and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
+            Log.i("BASE REQUEST","url : "+urlConnection.getURL());
+            urlConnection.setConnectTimeout(8000); // TimeOut
+            urlConnection.setRequestMethod(method); // Request type
+
+
+            // Responses from the server (code and message)
+            serverResponseCode = urlConnection.getResponseCode();
+            String serverResponseMessage = urlConnection.getResponseMessage();
+
+            Log.i("BASE REQUEST","Response code : "+serverResponseCode+" || "+serverResponseMessage);
+
+            if(serverResponseCode == 200){
+
+                // We get the returned from the request
+                String returnedJSON;
+
+                InputStream is = urlConnection.getInputStream();
+
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line = null;
+                while ((line = bReader.readLine()) != null) {
+                    sBuilder.append(line + "\n");
+                }
+
+                is.close();
+                returnedJSON = sBuilder.toString();
+
+                Log.v("AccountACCESS","json : "+returnedJSON);
+
+                urlConnection.disconnect();
+
+                return returnedJSON;
+            }
+
+
+
+        } catch (IOException e) {
+            Log.e("BASE REQUEST", "Error "+e.getMessage(), e);
+
+            return null;
+        }
+
+        return null;
+    }
+
+
+    /**
+     * This function send a HTTP Request with parameters and token
+     * @param urlPath
+     * @param method
+     * @return
+     */
+    public static String requestBuilder(String urlPath, String method, String token, ArrayList<String> params){
+
+
+        HttpURLConnection urlConnection = null;
+        int serverResponseCode = 0;
+
+        try {
+
+            URL url = new URL(urlPath);
+
+            // Create the request to Webservice and open the connection
+            urlConnection = (HttpURLConnection) url.openConnection();
+            Log.i("BASE REQUEST","url : "+urlConnection.getURL());
+            urlConnection.setConnectTimeout(8000); // TimeOut
+            urlConnection.setRequestMethod(method); // Request type
+            //Token
+            if(token != null) urlConnection.setRequestProperty("Authorization", "token: "+token);
+
+            //Parameters
+            if(params != null && params.size() > 0){
+                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                String postParameters = "";
+                for (int i = 0; i < params.size(); i++) {
+                    if (i > 0){
+                        postParameters += "&"+params.get(i);
+                    }
+                    else{
+                        postParameters += params.get(i);
+                    }
+                }
+
+                urlConnection.setFixedLengthStreamingMode(postParameters.getBytes().length);
+                PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+                out.print(postParameters);
+                out.close();
+            }
+
+            // Responses from the server (code and message)
+            serverResponseCode = urlConnection.getResponseCode();
+            String serverResponseMessage = urlConnection.getResponseMessage();
+
+            Log.i("BASE REQUEST","Response code : "+serverResponseCode+" || "+serverResponseMessage);
+
+            if(serverResponseCode == 200){
+
+                // We get the returned from the request
+                String returnedJSON;
+
+                InputStream is = urlConnection.getInputStream();
+
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line = null;
+                while ((line = bReader.readLine()) != null) {
+                    sBuilder.append(line + "\n");
+                }
+
+                is.close();
+                returnedJSON = sBuilder.toString();
+
+                Log.v("AccountACCESS","json : "+returnedJSON);
+
+                urlConnection.disconnect();
+
+                return returnedJSON;
+            }
+
+
+
+        } catch (IOException e) {
+            Log.e("BASE REQUEST", "Error "+e.getMessage(), e);
+
+            return null;
+        }
+
+        return null;
+    }
+
 }

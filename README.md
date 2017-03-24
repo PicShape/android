@@ -16,18 +16,18 @@ You can post a picture to PicShape server and you will get a Pic converted in di
 You can choose what types of shapes you want and how much iterations you want on your pic.
 
 
-<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/param_activity.png" width="270" height="480"/>
+![Wall Activity](./readme_imgs/param_activity.png)
 
 
 You can browse over other profil to see their picture PicShaped !
 
 Example :
 
-<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/gallery_activity.png" width="270" height="480"/>
+![Gallery Activity](./readme_imgs/gallery_activity.png)
 
-<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/wall_activity.png" width="270" height="480"/>
+![Wall Activity](./readme_imgs/wall_activity.png)
 
-<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/conversion_sample.gif" width="270" height="480"/>
 
-<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/picToShape.jpg" width="640" height="360"/>
-<img src="https://github.com/PicShape/android/blob/develop/readme_imgs/picShaped.jpg" width="640" height="360"/>
+![Wall Activity](./readme_imgs/picToShape.jpg)
+
+![Wall Activity](./readme_imgs/picShaped.jpg)

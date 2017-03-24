@@ -19,8 +19,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_above="@id/signin_form_layout"
-        android:layout_marginBottom="30dp">
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp">
 
         <ImageView
             android:id="@+id/logo_imageView"
@@ -54,9 +54,9 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:gravity="center_horizontal|center_vertical"
             android:textAllCaps="true"
             android:text="@string/signup_text"/>
@@ -65,7 +65,7 @@
             android:id="@+id/pseudo_textView"
             android:text="@string/pseudo_text"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:gravity="center_horizontal|center_vertical"
             android:textSize="16sp"
             android:textColor="@android:color/white"
@@ -83,7 +83,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:gravity="center_horizontal|center_vertical"
