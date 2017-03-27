@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_result"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context="com.example.android.picshape.view.ResultActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:background="@color/primary">
+        <TextView
+            android:text="@string/result_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textView"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:gravity="center_horizontal|center_vertical"
+            android:textAllCaps="true"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:padding="10dp"
+        android:id="@+id/result_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="18sp"
+        android:text="@string/touch_original_text"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:background="@color/primary">
+        <Button
+            android:id="@+id/back_convert_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button"
+            android:onClick="backToConvertActivity"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:text="Back to conversion"/>
+    </RelativeLayout>
+
+</LinearLayout>

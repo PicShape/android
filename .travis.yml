@@ -1,0 +1,38 @@
+language: android
+jdk: oraclejdk8
+android:
+  components:
+    - tools # to get the new `repository-11.xml`
+    - tools # see https://github.com/travis-ci/travis-ci/issues/6040#issuecomment-219367943)
+    - build-tools-23.0.2
+    - platform-tools
+    - android-23
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - extra-android-support
+    - extra-google-google_play_services
+    - extra
+    - sys-img-armeabi-v7a-addon-google_apis-google-23
+  licenses:
+    - android-sdk-license-5be876d5
+    - android-sdk-license-c81a61d9
+
+env:
+  global:
+   # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=6
+    - ANDROID_ABI=google_apis/armeabi-v7a
+
+# Emulator Management: Create, Start and Wait
+before_script:
+  - echo no | android create avd --force -n test -t android-23 --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
+script:
+   - ./gradlew build connectedCheck
+os:
+   - linux
+notifications:
+  slack: leconseil:Q3qnyUxsDaGi86Z6l25io2FW

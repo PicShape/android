@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.android.picshape">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".view.ParamActivity">
+            android:parentActivityName=".DeskActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.GalleryActivity" />
+        </activity>
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".view.ResultActivity">
+        </activity>
+        <activity android:name=".view.ConnectActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.SinglePicActivity" >
+        </activity>
+        <activity android:name=".view.AccountActivity">
+            android:parentActivityName=".GalleryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.GalleryActivity" />
+        </activity>
+        <activity android:name=".view.WallActivity" />
+        <activity android:name=".view.ConvertActivity" />
+        <activity android:name=".view.GalleryActivity"/>
+
+        <service android:name=".service.UploadPicShapeService" >
+        </service>
+    </application>
+
+</manifest>
