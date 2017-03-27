@@ -79,8 +79,6 @@ public class PictureAdapter extends BaseAdapter {
         // We get the pic at the position
         PictureShape picShape = (PictureShape) getItem(position);
 
-        // Set value
-        //pic.setImageBitmap(picShape.getPicBitmap());
 
         PictureShape picture = gallery.get(position);
 

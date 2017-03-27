@@ -253,7 +253,4 @@ public class AccountAccess {
     }
 
 
-
-    // Utility function
-
 }

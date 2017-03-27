@@ -169,7 +169,6 @@ public class ParamActivity extends AppCompatActivity {
 
                 startService(intent);
 
-                //TODO Launch Gallery
                 Intent galleryIntent = new Intent(this, GalleryActivity.class);
                 galleryIntent.putExtra("service","ON");
                 startActivity(galleryIntent);

@@ -32,6 +32,7 @@
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:indeterminate="true"
             app:spb_sections_count="4"
             app:spb_color="@color/accent_green"

@@ -184,6 +184,10 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
         swipeContainer.setRefreshing(false);
     }
 
+    /**
+     * This function show/hide User Search layout
+     * @param toggle
+     */
     public void showHideListViews(boolean toggle){
         if(toggle){
             mPicturesListView.setVisibility(GONE);
@@ -199,12 +203,6 @@ public class WallActivity extends AppCompatActivity implements SearchView.OnQuer
      * This function displays account information
      */
     public void displaysPictures(){
-        // TODO fill counters
-
-        //TODO fill listView
-        /*LinkedList<PictureShape> gallery = demoGallery();
-        PictureAdapter adapterGallery = new PictureAdapter(this, gallery);
-        mPicturesListView.setAdapter(adapterGallery);*/
         getUsersPictures();
     }
 

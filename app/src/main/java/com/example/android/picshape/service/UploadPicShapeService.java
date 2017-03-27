@@ -40,6 +40,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by emerikbedouin on 03/03/2017.
+ * This service makes a PicShape Request in background to convert a picture
  */
 
 public class UploadPicShapeService extends IntentService {
@@ -104,6 +105,12 @@ public class UploadPicShapeService extends IntentService {
 
     }
 
+    /**
+     * This function create a notfication to users
+     * @param title
+     * @param text
+     * @param result
+     */
     private void createNotification(String title, String text, int result){
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
